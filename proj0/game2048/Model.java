@@ -94,7 +94,7 @@ public class Model extends Observable {
         setChanged();
     }
 
-    /** Tilt the board toward SIDE. Return true iff this changes the board.
+    /** Tilt the board toward SIDE. Return true if this changes the board.
      *
      * 1. If two Tile objects are adjacent in the direction of motion and have
      *    the same value, they are merged into one Tile of twice the original
@@ -137,8 +137,16 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
-        return false;
+        boolean empty = false;
+        for (int row =0; row < b.size(); row += 1){
+            for (int col = 0; col < b.size(); col += 1) {
+                if (b.tile(col, row) == null){
+                    empty = true;
+                    break;
+                }
+            }
+        }
+        return empty;
     }
 
     /**
@@ -147,8 +155,16 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
-        return false;
+        boolean maximum = false;
+        for (int row =0; row < b.size(); row += 1){
+            for (int col = 0; col < b.size(); col += 1) {
+                if (b.tile(col, row).value() == MAX_PIECE){
+                    maximum = true;
+                    break;
+                }
+            }
+        }
+        return maximum;
     }
 
     /**
