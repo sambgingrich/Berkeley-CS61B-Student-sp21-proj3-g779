@@ -1,5 +1,6 @@
 package game2048;
 
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Observable;
 
@@ -107,16 +108,75 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
-        boolean changed;
-        changed = false;
+        boolean changed = false;
 
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        if (side == Side.NORTH) {
+            changed =  tiltUP();
+        } else {
+            board.setViewingPerspective(side);
+            changed = tiltUP();
+            board.setViewingPerspective(Side.NORTH);
+        }
+
         checkGameOver();
         if (changed) {
             setChanged();
+        }
+        return changed;
+    }
+
+    public boolean[][] merge = new boolean[][] {
+            new boolean[]{true, true, true, true},
+            new boolean[]{true, true, true, true},
+            new boolean[]{true, true, true, true},
+            new boolean[]{true, true, true, true}
+    };
+
+
+    /** Tilts up and moves all the pieces. Helper for tilt.*/
+    public boolean tiltUP(){
+        boolean change = false;
+        //Arrays.fill(merge, true); /* @source: Stack overflow for Arrays.fill()*/
+        for (int col =0; col < board.size(); col += 1){
+            for (int row = 2; row >= 0 ; row -= 1) {
+                if(findMoves(col, row))
+                    change = true;
+                }
+            }
+        return change;
+    }
+
+    /** Finds the right move for a given index. Helper for tiltUp.
+     * Inherits the merge boolean array from the call to tiltUp and
+     * modifies it with each call. */
+    public boolean findMoves(int col, int row){
+        Tile t = board.tile(col, row);
+        boolean changed = false;
+        if (t!= null) {
+            int[][] aboveIndeces = new int[][]{
+                    new int[]{col, row + 3},
+                    new int[]{col, row + 2},
+                    new int[]{col, row + 1}
+            };
+            for (int i = 0; i < aboveIndeces.length; i += 1) {
+                if (validIndex(board, aboveIndeces[i][0], aboveIndeces[i][1])) {
+                    Tile t2 = board.tile(aboveIndeces[i][0], aboveIndeces[i][1]);
+                    if (t2 == null) {
+                        board.move(aboveIndeces[i][0], aboveIndeces[i][1], t);
+                        changed = true;
+                    } else if (t.value() == t2.value()) {
+                        if (merge[aboveIndeces[i][0]][aboveIndeces[i][1]]) {
+                            board.move(aboveIndeces[i][0], aboveIndeces[i][1], t);
+                            merge[aboveIndeces[i][0]][aboveIndeces[i][1]] = false;
+                            changed = true;
+                        }
+                    }
+                }
+            }
         }
         return changed;
     }
@@ -158,9 +218,11 @@ public class Model extends Observable {
         boolean maximum = false;
         for (int row =0; row < b.size(); row += 1){
             for (int col = 0; col < b.size(); col += 1) {
-                if (b.tile(col, row).value() == MAX_PIECE){
-                    maximum = true;
-                    break;
+                if (b.tile(col, row) != null) {
+                    if (b.tile(col, row).value() == MAX_PIECE) {
+                        maximum = true;
+                        break;
+                    }
                 }
             }
         }
@@ -177,6 +239,12 @@ public class Model extends Observable {
         return (emptySpaceExists(b)) || (EqualAdjacents(b));
     }
 
+    /** Helper for atLeastOneMoveExists.
+     * Iterates through each tile checking
+     * adjacent tiles for a match
+     * @param b a Board
+     * @return boolean true if there are two equal adjacent values
+     */
     public static boolean EqualAdjacents(Board b) {
         boolean isequal = false;
         for (int row =0; row < b.size(); row += 1){
@@ -184,7 +252,7 @@ public class Model extends Observable {
                 int[][] adjacentsIndeces = new int[][]{
                         new int[]{col, row - 1}, new int[]{col, row + 1},
                         new int[]{col + 1, row}, new int[]{col - 1, row}};
-                for (int i = 0; i < 4; i += 1){
+                for (int i = 0; i < adjacentsIndeces.length; i += 1){
                     if (validIndex(b, adjacentsIndeces[i][0], adjacentsIndeces[i][1])){
                         if (b.tile(col, row).value() ==
                                 b.tile(adjacentsIndeces[i][0], adjacentsIndeces[i][1]).value()){
@@ -198,7 +266,7 @@ public class Model extends Observable {
         return isequal;
     }
 
-    public static boolean validIndex(Board b, int row, int col) {
+    public static boolean validIndex(Board b, int col, int row) {
         return (row > 0) && (col > 0) && (row < b.size()) && (col < b.size());
     }
 
