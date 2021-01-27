@@ -15,7 +15,7 @@ public class Model extends Observable {
     private int score;
     /** Maximum score so far.  Updated when game ends. */
     private int maxScore;
-    /** True iff game is ended. */
+    /** True if game is ended. */
     private boolean gameOver;
 
     /* Coordinate System: column C, row R of the board (where row 0,
@@ -110,10 +110,6 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
-
         if (side == Side.NORTH) {
             changed =  tiltUP();
         } else {
@@ -128,57 +124,59 @@ public class Model extends Observable {
         }
         return changed;
     }
-
-    public boolean[][] merge = new boolean[][] {
-            new boolean[]{true, true, true, true},
-            new boolean[]{true, true, true, true},
-            new boolean[]{true, true, true, true},
-            new boolean[]{true, true, true, true}
-    };
-
+    /* An array which stores whether a row in a given column can be merged into. Should be reset for each column.*/
+    private boolean[] merge = new boolean[4];
+    /*Not sure how to access size for this without getting an error*/
 
     /** Tilts up and moves all the pieces. Helper for tilt.*/
-    public boolean tiltUP(){
+    private boolean tiltUP(){
         boolean change = false;
-        //Arrays.fill(merge, true); /* @source: Stack overflow for Arrays.fill()*/
         for (int col =0; col < board.size(); col += 1){
+            /*Reset the merge boolean representing if a merge is possible for each row in a column*/
+            for(int i=0; i<board.size(); i+=1)merge[i] = true;
             for (int row = 2; row >= 0 ; row -= 1) {
-                if(findMoves(col, row))
+                if (board.tile(col, row) != null && findMoves(col, row))
                     change = true;
                 }
             }
         return change;
     }
 
-    /** Finds the right move for a given index. Helper for tiltUp.
+    /* Finds the right move for a given index. Helper for tiltUp.
      * Inherits the merge boolean array from the call to tiltUp and
      * modifies it with each call. */
-    public boolean findMoves(int col, int row){
+    private boolean findMoves(int col, int row){
         Tile t = board.tile(col, row);
         boolean changed = false;
-        if (t!= null) {
-            int[][] aboveIndeces = new int[][]{
-                    new int[]{col, row + 3},
-                    new int[]{col, row + 2},
-                    new int[]{col, row + 1}
-            };
-            for (int i = 0; i < aboveIndeces.length; i += 1) {
-                if (validIndex(board, aboveIndeces[i][0], aboveIndeces[i][1])) {
-                    Tile t2 = board.tile(aboveIndeces[i][0], aboveIndeces[i][1]);
+            for (int i = board.size()-1; i > 0; i -= 1) {
+                if (validIndex(board, col, row + i)) {
+                    Tile t2 = board.tile(col, row + i);
                     if (t2 == null) {
-                        board.move(aboveIndeces[i][0], aboveIndeces[i][1], t);
+                        board.move(col, row + i, t);
                         changed = true;
-                    } else if (t.value() == t2.value()) {
-                        if (merge[aboveIndeces[i][0]][aboveIndeces[i][1]]) {
-                            board.move(aboveIndeces[i][0], aboveIndeces[i][1], t);
-                            merge[aboveIndeces[i][0]][aboveIndeces[i][1]] = false;
-                            changed = true;
+                        break;
+                    } else if (t.value() == t2.value() && merge[row + i] && !isSkipping(col, row, row + i)){
+                        merge[t2.row()] = !board.move(col, row + i, t);
+                        score += tile(col, row + i).value();
+                        changed = true;
+                        break;
                         }
                     }
                 }
+        return changed;
+    }
+
+    /*Helper method for findMoves to determine if
+    a given move skips over tiles in a merge. */
+    private boolean isSkipping(int col, int row, int row2){
+        boolean skip = false;
+        if (row2 - row > 1) {
+            for (int i = 1; i < row2 - row; i+=1){
+                if (board.tile(col, row+i) != null)
+                    skip = true;
             }
         }
-        return changed;
+        return skip;
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -218,12 +216,10 @@ public class Model extends Observable {
         boolean maximum = false;
         for (int row =0; row < b.size(); row += 1){
             for (int col = 0; col < b.size(); col += 1) {
-                if (b.tile(col, row) != null) {
-                    if (b.tile(col, row).value() == MAX_PIECE) {
+                if (b.tile(col, row) != null && b.tile(col, row).value() == MAX_PIECE) {
                         maximum = true;
                         break;
                     }
-                }
             }
         }
         return maximum;
@@ -266,7 +262,7 @@ public class Model extends Observable {
         return isequal;
     }
 
-    public static boolean validIndex(Board b, int col, int row) {
+    private static boolean validIndex(Board b, int col, int row) {
         return (row > 0) && (col > 0) && (row < b.size()) && (col < b.size());
     }
 
