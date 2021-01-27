@@ -263,7 +263,7 @@ public class Model extends Observable {
     }
 
     private static boolean validIndex(Board b, int col, int row) {
-        return (row > 0) && (col > 0) && (row < b.size()) && (col < b.size());
+        return (row >= 0) && (col >= 0) && (row < b.size()) && (col < b.size());
     }
 
     @Override
