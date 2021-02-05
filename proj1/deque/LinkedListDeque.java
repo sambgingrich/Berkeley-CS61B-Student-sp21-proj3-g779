@@ -35,6 +35,9 @@ public class LinkedListDeque<T> {
     public void addFirst(T item){
         sentinel.next = new ThingNode(sentinel, item, sentinel.next);
         size += 1;
+        if (size == 1){
+            sentinel.previous = sentinel.next;
+        }
     }
 
     /** Adds item of type T to the back of the deque. */

@@ -21,9 +21,9 @@ public class ArrayDeque<T> {
         T[] newArray = (T[]) new Object[items.length*2];
         if (front) {
             int oldSize = size();
-            start = newArray.length/2 ;
-            System.arraycopy(items, 0, newArray, start, size());
-            end = start + oldSize;
+            start = newArray.length/2;
+            System.arraycopy(items, 0, newArray, start, oldSize);
+            end = start + oldSize - 1;
         } else {
             System.arraycopy(items, 0, newArray, 0, items.length);
         }
@@ -44,9 +44,10 @@ public class ArrayDeque<T> {
     public void addLast(T item) {
         if (end==items.length) {
             resize(false);
+        } else if (!isEmpty()){
+            end += 1;
         }
         items[end] = item;
-        end += 1;
     }
 
     public boolean isEmpty() {
