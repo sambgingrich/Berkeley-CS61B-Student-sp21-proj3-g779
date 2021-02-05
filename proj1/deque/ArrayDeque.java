@@ -22,7 +22,7 @@ public class ArrayDeque<T> {
         if (front) {
             int oldSize = size();
             start = newArray.length/2 ;
-            System.arraycopy(items, 0, newArray, start, size());
+            System.arraycopy(items, 0, newArray, start, oldSize);
             end = start + oldSize;
         } else {
             System.arraycopy(items, 0, newArray, 0, items.length);
