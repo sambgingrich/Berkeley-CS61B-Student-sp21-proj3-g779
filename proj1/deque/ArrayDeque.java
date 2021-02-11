@@ -17,15 +17,19 @@ public class ArrayDeque<T> {
      * adds empty values to the front. Otherwise
      * adds values to the back of the list.
      */
-    private void resize(boolean front) {
+    private void resize(boolean front, boolean add) {
         T[] newArray = (T[]) new Object[items.length*2];
-        if (front) {
+        if (front & add) {
             int oldSize = size();
             start = newArray.length/2 ;
             System.arraycopy(items, 0, newArray, start, oldSize);
             end = start + oldSize;
-        } else {
+        } else if (!front & add){
             System.arraycopy(items, 0, newArray, 0, items.length);
+        } else if (front & !add){
+            //Downsize the front here
+        } else if (!front & !add){
+            //Downsize the back here
         }
         items = newArray;
     }
@@ -33,7 +37,7 @@ public class ArrayDeque<T> {
     /** Adds item of type T to the front of the deque. */
     public void addFirst(T item) {
         if (start == 0) {
-            resize(true);
+            resize(true, true);
         } else if (!isEmpty()){
             start -= 1;
         }
@@ -43,7 +47,7 @@ public class ArrayDeque<T> {
     /** Adds item of type T to the back of the deque. */
     public void addLast(T item) {
         if (end==items.length) {
-            resize(false);
+            resize(false, true);
         }
         items[end] = item;
         end += 1;
@@ -85,6 +89,10 @@ public class ArrayDeque<T> {
         if (start != end) {
             start += 1;
         }
+        //Check if array should downsize
+        if (items.length > size() * 4){
+            resize(true, false);
+        }
         return first;
     }
 
@@ -99,6 +107,10 @@ public class ArrayDeque<T> {
         items[end] = null;
         if (end > start){
             end -= 1;
+        }
+        //Check if array should downsize
+        if (items.length > size() * 4){
+            resize(false, false);
         }
         return last;
     }

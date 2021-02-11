@@ -1,5 +1,6 @@
 package deque;
 
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -115,24 +116,28 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Add a test to check that get doesn't modify the deque. */
+    /* Add a test to check that get and getRecursive don't modify the deque. */
     public void getTest() {
-
-        System.out.println("Make a test to check that get doesn't modify the deque.");
-        /*
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100; i++) {
             lld1.addLast(i);
         }
-
-        for (double i = 0; i < 500000; i++) {
-            assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
+        //Save old list to check if it is modified later.
+        LinkedListDeque<Integer> oldList = new LinkedListDeque<Integer>();
+        for (int i = 0; i < 100; i++) {
+            oldList.addLast(i);
         }
 
-        for (double i = 999999; i > 500000; i--) {
-            assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
-        }
+        //Check random index to make sure item is equal to the index
+        int randVal = StdRandom.uniform(0, 100);
+        int item = lld1.get(randVal);
+        int itemRec = lld1.getRecursive(randVal);
+        assertEquals("Item should equal index", randVal, item);
+        assertEquals("Item (obtained recursively) should equal index", randVal, itemRec);
 
-        */
+        //Check if old list is modified.
+        for (int i = 99; i > 0; i-- ){
+            assertEquals("Should have the same value", (Integer) oldList.removeLast(), (Integer) lld1.removeLast(), 0.0);
+        }
     }
 }

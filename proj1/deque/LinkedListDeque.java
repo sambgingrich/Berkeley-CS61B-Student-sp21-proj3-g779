@@ -110,8 +110,14 @@ public class LinkedListDeque<T> {
 
     /** Same as get, but recursive. */
     public T getRecursive(int index){
-        System.out.println("Not sure about this one yet");
-        return null;
+        return getRecursivehelper(index, sentinel.next);
+    }
+
+    private T getRecursivehelper(int index, ThingNode current){
+        if (index == 0) {
+            return current.item;
+        }
+        return getRecursivehelper(index - 1, current.next);
     }
 
 }
