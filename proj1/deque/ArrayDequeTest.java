@@ -127,15 +127,15 @@ public class ArrayDequeTest {
     /* Add large number of elements to deque; check if order is correct. */
     public void bigADequeTest() {
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 50; i++) {
             lld1.addLast(i);
         }
 
-        for (double i = 0; i < 5000; i++) {
+        for (double i = 0; i < 25; i++) {
             assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
         }
 
-        for (double i = 999999; i > 5000; i--) {
+        for (double i = 49; i > 25; i--) {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
     }

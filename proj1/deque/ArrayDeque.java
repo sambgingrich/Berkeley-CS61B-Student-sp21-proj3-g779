@@ -60,8 +60,7 @@ public class ArrayDeque<T> {
     public int size() {
         if (isEmpty()) {
             return 0;
-        }
-        else {
+        } else {
             return end - start + 1;
         }
     }
@@ -90,9 +89,9 @@ public class ArrayDeque<T> {
             start += 1;
         }
         //Check if array should downsize
-        if (items.length > size() * 4){
+        /*if (items.length > size() * 4){
             resize(true, false);
-        }
+        }*/
         return first;
     }
 
@@ -103,15 +102,15 @@ public class ArrayDeque<T> {
         if (isEmpty()){
             return null;
         }
-        T last = get(size() - 1);
+        T last = get(size() - 2);
         items[end] = null;
         if (end > start){
             end -= 1;
         }
         //Check if array should downsize
-        if (items.length > size() * 4){
+       /* if (items.length > size() * 4){
             resize(false, false);
-        }
+        } */
         return last;
     }
 
