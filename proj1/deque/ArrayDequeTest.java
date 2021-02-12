@@ -94,21 +94,28 @@ public class ArrayDequeTest {
         // should be empty
         assertTrue("ad1 should be empty upon initialization", ad1.isEmpty());
 
-        ad1.addFirst(10);
+        for (int i = 0; i < 6; i++){
+            ad1.addLast(i);
+        }
         // should not be empty
         assertFalse("ad1 should contain 1 item", ad1.isEmpty());
 
-        ad1.removeFirst();
+        for (int i = 0; i < 6; i++){
+            int first = ad1.removeFirst();
+            assertEquals(first, i);
+        }
         // should be empty
         assertTrue("ad1 should be empty after removal", ad1.isEmpty());
 
-        ad1.addFirst(10);
+        for (int i = 0; i < 6; i++){
+            ad1.addLast(i);
+        }
         // should not be empty
         assertFalse("ad1 should contain 1 item", ad1.isEmpty());
         int size = ad1.size();
-        assertEquals( 1, size);
-        int firstItem = ad1.get(0);
-        assertEquals(10, firstItem);
+        assertEquals( 6, size);
+        int secondItem = ad1.get(1);
+        assertEquals(1, secondItem);
     }
 
     @Test

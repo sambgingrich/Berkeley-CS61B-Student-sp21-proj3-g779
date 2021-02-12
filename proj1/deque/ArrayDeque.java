@@ -8,7 +8,7 @@ public class ArrayDeque<T> {
     /** Creates an empty deque. */
     public ArrayDeque() {
         items = (T[]) new Object[8];
-        end = 4;
+        end = 5;
         start = 4;
     }
 
@@ -38,31 +38,28 @@ public class ArrayDeque<T> {
     public void addFirst(T item) {
         if (start == 0) {
             resize(true, true);
-        } else if (!isEmpty()){
-            start -= 1;
         }
         items[start] = item;
+        start -= 1;
     }
 
     /** Adds item of type T to the back of the deque. */
     public void addLast(T item) {
         if (end==items.length) {
             resize(false, true);
-        }
+        } /*else if (start == end && items[start] != null) {
+            end += 1;
+        } */
         items[end] = item;
         end += 1;
     }
 
     public boolean isEmpty() {
-        return end == start && items[start] == null;
+        return size() == 0;
     }
 
     public int size() {
-        if (isEmpty()) {
-            return 0;
-        } else {
-            return end - start + 1;
-        }
+        return end - start - 1;
     }
 
     /** Prints the items in the deque from first to last, separated by a space.
@@ -102,7 +99,7 @@ public class ArrayDeque<T> {
         if (isEmpty()){
             return null;
         }
-        T last = get(size() - 2);
+        T last = get(size() - 1);
         items[end] = null;
         if (end > start){
             end -= 1;
@@ -123,7 +120,7 @@ public class ArrayDeque<T> {
         if (index > size() || index < 0 ){
             return null;
         }
-        return items[start + index];
+        return items[start + index + 1];
     }
 
 }
