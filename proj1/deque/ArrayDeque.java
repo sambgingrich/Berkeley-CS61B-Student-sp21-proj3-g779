@@ -21,9 +21,9 @@ public class ArrayDeque<T> {
         T[] newArray = (T[]) new Object[items.length*2];
         if (front & add) {
             int oldSize = size();
-            start = newArray.length/2 ;
-            System.arraycopy(items, 0, newArray, start, oldSize);
-            end = start + oldSize;
+            start = newArray.length/2 - 1;
+            System.arraycopy(items, 1, newArray, start + 1, oldSize);
+            end = start + oldSize + 1;
         } else if (!front & add){
             System.arraycopy(items, 0, newArray, 0, items.length);
         } else if (front & !add){
@@ -81,7 +81,7 @@ public class ArrayDeque<T> {
             return null;
         }
         T first = get(0);
-        items[start] = null;
+        items[start + 1] = null;
         if (start != end) {
             start += 1;
         }
@@ -100,7 +100,7 @@ public class ArrayDeque<T> {
             return null;
         }
         T last = get(size() - 1);
-        items[end] = null;
+        items[end - 1] = null;
         if (end > start){
             end -= 1;
         }

@@ -95,12 +95,12 @@ public class ArrayDequeTest {
         assertTrue("ad1 should be empty upon initialization", ad1.isEmpty());
 
         for (int i = 0; i < 6; i++){
-            ad1.addLast(i);
+            ad1.addFirst(i);
         }
         // should not be empty
         assertFalse("ad1 should contain 1 item", ad1.isEmpty());
 
-        for (int i = 0; i < 6; i++){
+        for (int i = 5; i >= 0; i--){
             int first = ad1.removeFirst();
             assertEquals(first, i);
         }
@@ -146,4 +146,16 @@ public class ArrayDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
     }
+
+    @Test
+    /* Trying to replicate autograder */
+    public void AG1Test(){
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        for (int i = 0; i < 10; i++) {
+            int sizeC = lld1.size();
+            assertEquals(i, sizeC);
+            lld1.addFirst(i);
+        }
+    }
+
 }
