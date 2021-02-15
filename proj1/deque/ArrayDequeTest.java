@@ -1,6 +1,4 @@
 package deque;
-
-import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -88,32 +86,33 @@ public class ArrayDequeTest {
     }
 
     @Test
-    /** Adds an item, then removes an item, then adds an item and ensures that da is empty afterwards.  */
+    /** Adds an item, then removes an item, then adds an item
+     * and ensures that ad is empty afterwards.  */
     public void addRemoveaddTest() {
         ArrayDeque<Integer> ad1 = new ArrayDeque<Integer>();
         // should be empty
         assertTrue("ad1 should be empty upon initialization", ad1.isEmpty());
 
-        for (int i = 0; i < 6; i++){
+        for (int i = 0; i < 6; i++) {
             ad1.addFirst(i);
         }
         // should not be empty
         assertFalse("ad1 should contain 1 item", ad1.isEmpty());
 
-        for (int i = 5; i >= 0; i--){
+        for (int i = 5; i >= 0; i--) {
             int first = ad1.removeFirst();
             assertEquals(first, i);
         }
         // should be empty
         assertTrue("ad1 should be empty after removal", ad1.isEmpty());
 
-        for (int i = 0; i < 6; i++){
+        for (int i = 0; i < 6; i++) {
             ad1.addLast(i);
         }
         // should not be empty
         assertFalse("ad1 should contain 1 item", ad1.isEmpty());
         int size = ad1.size();
-        assertEquals( 6, size);
+        assertEquals(6, size);
         int secondItem = ad1.get(1);
         assertEquals(1, secondItem);
     }
@@ -149,7 +148,7 @@ public class ArrayDequeTest {
 
     @Test
     /* Trying to replicate autograder */
-    public void AG1Test(){
+    public void agTest1() {
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         for (int i = 0; i < 10; i++) {
             int sizeC = lld1.size();

@@ -6,11 +6,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class RandomizedTesting{
+public class RandomizedTesting {
     @Test
-    public void randomizedTestAD() {
-       AListNoResizing<Integer> LLD = new AListNoResizing<>();
-       ArrayDeque<Integer> AD = new ArrayDeque<>();
+    public void randomizedTestad() {
+        AListNoResizing<Integer> lld = new AListNoResizing<>();
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
 
         int N = 999;
         for (int i = 0; i < N; i += 1) {
@@ -18,38 +18,26 @@ public class RandomizedTesting{
             if (operationNumber == 0) {
                 // addLast
                 int randVal = StdRandom.uniform(0, 100);
-                LLD.addLast(randVal);
-                AD.addLast(randVal);
-            } else if (operationNumber == 1) {
+                lld.addLast(randVal);
+                ad.addLast(randVal);
+            } else if (operationNumber >= 1 || operationNumber == 4) {
                 // size
-                int correct = LLD.size();
-                int actual = AD.size();
+                int correct = lld.size();
+                int actual = ad.size();
                 assertEquals(correct, actual);
-            } /* else if (operationNumber == 2) {
-                // removeFirst
-                if (LLD.size() > 0) {
-                    int correct = LLD.removeFirst();
-                    int actual = AD.removeFirst();
-                    assertEquals(correct, actual);
-                }
-            } */ else if (operationNumber == 3) {
+            } else if (operationNumber == 3) {
                 // removeLast
-                if (LLD.size() > 0) {
-                    int correct = LLD.removeLast();
-                    int actual = AD.removeLast();
+                if (lld.size() > 0) {
+                    int correct = lld.removeLast();
+                    int actual = ad.removeLast();
                     assertEquals(correct, actual);
                 }
-            } /* else if (operationNumber == 4) {
-                // addFirst
-                int randVal = StdRandom.uniform(0, 100);
-                LLD.addFirst(randVal);
-                AD.addFirst(randVal);
-            } */ else if (operationNumber == 5) {
+            } else if (operationNumber == 5) {
                 // get
-                if (LLD.size() > 0) {
-                    int randVal = StdRandom.uniform(0, LLD.size());
-                    int correct = LLD.get(randVal);
-                    int actual = AD.get(randVal);
+                if (lld.size() > 0) {
+                    int randVal = StdRandom.uniform(0, lld.size());
+                    int correct = lld.get(randVal);
+                    int actual = ad.get(randVal);
                     assertEquals(correct, actual);
                 }
             }
@@ -57,9 +45,9 @@ public class RandomizedTesting{
     }
 
     @Test
-    public void randomizedTestLLD() {
-        LinkedListDeque<Integer> LLD = new LinkedListDeque<Integer>();
-        AListNoResizing<Integer> AD = new AListNoResizing<>();
+    public void randomizedTestlld() {
+        LinkedListDeque<Integer> lld = new LinkedListDeque<Integer>();
+        AListNoResizing<Integer> ad = new AListNoResizing<>();
 
         int N = 5000;
         for (int i = 0; i < N; i += 1) {
@@ -67,38 +55,26 @@ public class RandomizedTesting{
             if (operationNumber == 0) {
                 // addLast
                 int randVal = StdRandom.uniform(0, 100);
-                LLD.addLast(randVal);
-                AD.addLast(randVal);
-            } else if (operationNumber == 1) {
+                lld.addLast(randVal);
+                ad.addLast(randVal);
+            } else if (operationNumber >= 1 || operationNumber == 4) {
                 // size
-                int correct = LLD.size();
-                int actual = AD.size();
+                int correct = lld.size();
+                int actual = ad.size();
                 assertEquals(correct, actual);
-            } /* else if (operationNumber == 2) {
-                // removeFirst
-                if (LLD.size() > 0) {
-                    int correct = LLD.removeFirst();
-                    int actual = AD.removeFirst();
-                    assertEquals(correct, actual);
-                }
-            } */ else if (operationNumber == 3) {
+            } else if (operationNumber == 3) {
                 // removeLast
-                if (LLD.size() > 0) {
-                    int correct = LLD.removeLast();
-                    int actual = AD.removeLast();
+                if (lld.size() > 0) {
+                    int correct = lld.removeLast();
+                    int actual = ad.removeLast();
                     assertEquals(correct, actual);
                 }
-            } /* else if (operationNumber == 4) {
-                // addFirst
-                int randVal = StdRandom.uniform(0, 100);
-                LLD.addFirst(randVal);
-                AD.addFirst(randVal);
-            } */ else if (operationNumber == 5) {
+            } else if (operationNumber == 5) {
                 // get
-                if (LLD.size() > 0) {
-                    int randVal = StdRandom.uniform(0, LLD.size());
-                    int correct = LLD.get(randVal);
-                    int actual = AD.get(randVal);
+                if (lld.size() > 0) {
+                    int randVal = StdRandom.uniform(0, lld.size());
+                    int correct = lld.get(randVal);
+                    int actual = ad.get(randVal);
                     assertEquals(correct, actual);
                 }
             }
@@ -107,43 +83,43 @@ public class RandomizedTesting{
 
     @Test
     public void randomizedTestBoth() {
-        LinkedListDeque<Integer> LLD = new LinkedListDeque<Integer>();
-        ArrayDeque<Integer> AD = new ArrayDeque<>();
+        LinkedListDeque<Integer> lld = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
 
         int N = 999;
         for (int i = 0; i < N; i += 1) {
             int operationNumber = StdRandom.uniform(0, 6);
-            assertTrue(LLD.size() == AD.size());
+            assertTrue(lld.size() == ad.size());
             if (operationNumber <= 1) {
                 // addLast
                 int randVal = StdRandom.uniform(0, 100);
-                LLD.addLast(randVal);
-                AD.addLast(randVal);
+                lld.addLast(randVal);
+                ad.addLast(randVal);
             } else if (operationNumber == 2) {
                 // removeFirst
-                if (LLD.size() > 0) {
-                    int correct = LLD.removeFirst();
-                    int actual = AD.removeFirst();
+                if (lld.size() > 0) {
+                    int correct = lld.removeFirst();
+                    int actual = ad.removeFirst();
                     assertEquals(correct, actual);
                 }
             } else if (operationNumber == 3) {
                 // removeLast
-                if (LLD.size() > 0) {
-                    int correct = LLD.removeLast();
-                    int actual = AD.removeLast();
+                if (lld.size() > 0) {
+                    int correct = lld.removeLast();
+                    int actual = ad.removeLast();
                     assertEquals(correct, actual);
                 }
             } else if (operationNumber == 4) {
                 // addFirst
                 int randVal = StdRandom.uniform(0, 100);
-                LLD.addFirst(randVal);
-                AD.addFirst(randVal);
+                lld.addFirst(randVal);
+                ad.addFirst(randVal);
             } else if (operationNumber == 5) {
                 // get
-                if (LLD.size() > 0) {
-                    int randVal = StdRandom.uniform(0, LLD.size());
-                    int correct = LLD.get(randVal);
-                    int actual = AD.get(randVal);
+                if (lld.size() > 0) {
+                    int randVal = StdRandom.uniform(0, lld.size());
+                    int correct = lld.get(randVal);
+                    int actual = ad.get(randVal);
                     assertEquals(correct, actual);
                 }
             }

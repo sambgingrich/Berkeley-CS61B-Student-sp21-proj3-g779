@@ -1,11 +1,9 @@
 package deque;
 
-import java.util.Comparator;
-
 public class ArrayDeque<T> implements Deque<T> {
     private T[] items;
     int end;
-    int start ;
+    int start;
 
     /** Creates an empty deque. */
     public ArrayDeque() {
@@ -14,12 +12,6 @@ public class ArrayDeque<T> implements Deque<T> {
         start = 4;
     }
 
-   /*public class AlphabeticalComparator implements Comparator<T> {
-        public int compare(String a, String b) {
-            return a.compareTo(b);
-        }
-
-    } */
     @Override
     public int size() {
         return end - start - 1;
@@ -68,7 +60,7 @@ public class ArrayDeque<T> implements Deque<T> {
     /** Adds item of type T to the back of the deque. */
     @Override
     public void addLast(T item) {
-        if (end==items.length) {
+        if (end == items.length) {
             resize(false, true);
         } /*else if (start == end && items[start] != null) {
             end += 1;
@@ -83,7 +75,7 @@ public class ArrayDeque<T> implements Deque<T> {
     @Override
     public void printDeque() {
         int i  = start;
-        while (i <= end){
+        while (i <= end) {
             System.out.print(items[i]);
             i += 1;
         }
@@ -95,7 +87,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * If no such item exists, returns null.*/
     @Override
     public T removeFirst() {
-        if (isEmpty()){
+        if (isEmpty()) {
             return null;
         }
         T first = get(0);
@@ -104,7 +96,7 @@ public class ArrayDeque<T> implements Deque<T> {
             start += 1;
         }
         //Check if array should downsize
-        if (size() > 1 && items.length > size() * 4){
+        if (size() > 1 && items.length > size() * 4) {
             resize(true, false);
         }
         return first;
@@ -115,16 +107,16 @@ public class ArrayDeque<T> implements Deque<T> {
      * If no such item exists, returns null */
     @Override
     public T removeLast() {
-        if (isEmpty()){
+        if (isEmpty()) {
             return null;
         }
         T last = get(size() - 1);
         items[end - 1] = null;
-        if (end > start){
+        if (end > start) {
             end -= 1;
         }
         //Check if array should downsize
-        if (size() > 1 && items.length > size() * 4){
+        if (size() > 1 && items.length > size() * 4) {
             resize(false, false);
         }
         return last;
@@ -136,7 +128,7 @@ public class ArrayDeque<T> implements Deque<T> {
      *  returns null. Does not alter the Deque.*/
     @Override
     public T get(int index) {
-        if (index > size() || index < 0 ){
+        if (index > size() || index < 0) {
             return null;
         }
         return items[start + index + 1];
