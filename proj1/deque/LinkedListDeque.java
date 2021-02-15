@@ -1,6 +1,6 @@
 package deque;
 
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Deque<T> {
     private ThingNode sentinel;
     private int size;
 
@@ -32,6 +32,7 @@ public class LinkedListDeque<T> {
     }
 
     /** Adds item of type T to the front of the deque. */
+    @Override
     public void addFirst(T item){
         sentinel.next = new ThingNode(sentinel, item, sentinel.next);
         size += 1;
@@ -41,6 +42,7 @@ public class LinkedListDeque<T> {
     }
 
     /** Adds item of type T to the back of the deque. */
+    @Override
     public void addLast(T item){
         sentinel.previous.next = new ThingNode(sentinel.previous, item , sentinel);
         sentinel.previous = sentinel.previous.next;
@@ -51,12 +53,14 @@ public class LinkedListDeque<T> {
         return size == 0;
     }
 
+    @Override
     public int size(){
         return size;
     }
 
     /** Prints the items in the deque from first to last, separated by a space.
      * Once all the items have been printed, print out a new line. */
+    @Override
     public void printDeque(){
         ThingNode p  = sentinel;
         while (p.next != sentinel){
@@ -68,6 +72,7 @@ public class LinkedListDeque<T> {
 
     /**Removes and returns the item at the front of the deque.
      * If no such item exists, returns null.*/
+    @Override
     public T removeFirst(){
         if (sentinel.next == sentinel) {
             return null;
@@ -82,6 +87,7 @@ public class LinkedListDeque<T> {
 
     /**Removes and returns the item at the back of the deque.
      * If no such item exists, returns null */
+    @Override
     public T removeLast(){
         if (sentinel.next == sentinel) {
             return null;
@@ -98,6 +104,7 @@ public class LinkedListDeque<T> {
      *  1 is the next item, and so forth. If no such item exists,
      *  returns null. Does not alter the Deque.
      */
+    @Override
     public T get(int index){
         int i =  0;
         ThingNode p = sentinel.next;
