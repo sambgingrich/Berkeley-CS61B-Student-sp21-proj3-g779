@@ -26,13 +26,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         size = 0;
     }
 
-    public LinkedListDeque(T item) {
-        sentinel = new ThingNode(null, null, null);
-        sentinel.next = new ThingNode(sentinel, item, sentinel);
-        sentinel.previous = sentinel.next;
-        size = 1;
-    }
-
     /* returns an iterator into self */
     public Iterator<T> iterator() {
         return new LinkedListIterator();
@@ -95,10 +88,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         sentinel.previous.next = new ThingNode(sentinel.previous, item, sentinel);
         sentinel.previous = sentinel.previous.next;
         size += 1;
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     @Override

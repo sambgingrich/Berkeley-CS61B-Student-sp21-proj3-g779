@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 public class ArrayDeque<T> implements Deque<T> {
     private T[] items;
-    int end;
-    int start;
+    private int end;
+    private int start;
 
     /** Creates an empty deque. */
     public ArrayDeque() {
@@ -39,7 +39,7 @@ public class ArrayDeque<T> implements Deque<T> {
         return end - start - 1;
     }
 
-    public boolean isEmpty() {
+    private boolean isEmptyAD() {
         return size() == 0;
     }
 
@@ -109,7 +109,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * If no such item exists, returns null.*/
     @Override
     public T removeFirst() {
-        if (isEmpty()) {
+        if (isEmptyAD()) {
             return null;
         }
         T first = get(0);
@@ -129,7 +129,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * If no such item exists, returns null */
     @Override
     public T removeLast() {
-        if (isEmpty()) {
+        if (isEmptyAD()) {
             return null;
         }
         T last = get(size() - 1);
