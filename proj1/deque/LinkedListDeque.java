@@ -1,5 +1,7 @@
 package deque;
 
+import java.util.Iterator;
+
 public class LinkedListDeque<T> implements Deque<T> {
     private ThingNode sentinel;
     private int size;
@@ -29,6 +31,52 @@ public class LinkedListDeque<T> implements Deque<T> {
         sentinel.next = new ThingNode(sentinel, item, sentinel);
         sentinel.previous = sentinel.next;
         size = 1;
+    }
+
+    /* returns an iterator into self */
+    public Iterator<T> iterator() {
+        return new LinkedListIterator();
+    }
+
+    private class LinkedListIterator implements Iterator<T> {
+        private ThingNode iteratorPos;
+        LinkedListIterator() {
+            iteratorPos = sentinel.next;
+        }
+        public boolean hasNext() {
+            return iteratorPos.next != sentinel;
+        }
+
+        public T next() {
+            T returnItem = iteratorPos.item;
+            iteratorPos = iteratorPos.next;
+            return returnItem;
+        }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (this == other) {
+            return true;
+        }
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        LinkedListDeque<T> o = (LinkedListDeque<T>) other;
+        if (o.size() != size()) {
+            return false;
+        }
+        for (int i = 0; i < size(); i++) {
+            T otherItem = o.get(i);
+            T thisItem = this.get(i);
+            if (otherItem != thisItem) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** Adds item of type T to the front of the deque. */
