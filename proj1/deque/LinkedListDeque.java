@@ -30,7 +30,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         return new LinkedListIterator();
     }
 
-    public class LinkedListIterator implements Iterator<T> {
+    private class LinkedListIterator implements Iterator<T> {
         private ThingNode iteratorPos;
         LinkedListIterator() {
             iteratorPos = sentinel.next;
@@ -42,7 +42,9 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
         public T next() {
             T returnItem = iteratorPos.item;
-            iteratorPos = iteratorPos.next;
+            if (hasNext()) {
+                iteratorPos = iteratorPos.next;
+            }
             return returnItem;
         }
     }
