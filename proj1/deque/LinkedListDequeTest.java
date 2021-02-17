@@ -125,11 +125,11 @@ public class LinkedListDequeTest {
         }
 
         //Check random index to make sure item is equal to the index
-       /* int randVal = StdRandom.uniform(0, 100);
+        int randVal = StdRandom.uniform(0, 100);
         int item = lld1.get(randVal);
         int itemRec = lld1.getRecursive(randVal);
         assertEquals("Item should equal index", randVal, item);
-        assertEquals("Item (obtained recursively) should equal index", randVal, itemRec); */
+        assertEquals("Item (obtained recursively) should equal index", randVal, itemRec);
 
         //Check if old list is modified.
         for (int i = 99; i > 0; i--) {
@@ -137,5 +137,25 @@ public class LinkedListDequeTest {
             int curr = lld1.removeLast();
             assertEquals("Should have the same value", old, curr);
         }
+    }
+
+
+    @Test
+    /* Trying to fix an obscure bug using the autograder output */
+    public void agHardCoded() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        lld1.addLast(0);
+        lld1.getRecursive(0);
+        int actual = lld1.removeLast();
+        assertEquals(0, actual);
+        lld1.addFirst(4);
+        int actual2 = lld1.removeLast();
+        assertEquals(4, actual);
+        lld1.addLast(6);
+        lld1.addFirst(7);
+        lld1.getRecursive(0);
+        lld1.removeLast();
+        int actual3 = lld1.removeLast();
+        assertEquals(7, actual);
     }
 }

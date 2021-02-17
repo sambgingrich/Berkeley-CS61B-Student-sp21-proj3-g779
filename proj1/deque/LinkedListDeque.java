@@ -3,8 +3,7 @@ import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private ThingNode sentinel;
-    private static int size;
-
+    int size;
 
     private class ThingNode {
         private ThingNode previous;
