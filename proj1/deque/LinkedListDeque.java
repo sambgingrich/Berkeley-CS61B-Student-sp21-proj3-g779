@@ -76,11 +76,9 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     /** Adds item of type T to the front of the deque. */
     @Override
     public void addFirst(T item) {
-        sentinel.next = new ThingNode(sentinel, item, sentinel.next);
+        sentinel.next.previous = new ThingNode(sentinel, item, sentinel.next);
         size += 1;
-        if (size == 1) {
-            sentinel.previous = sentinel.next;
-        }
+        sentinel.next = sentinel.next.previous;
     }
 
     /** Adds item of type T to the back of the deque. */
