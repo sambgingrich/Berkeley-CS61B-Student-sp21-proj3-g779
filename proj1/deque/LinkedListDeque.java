@@ -3,7 +3,7 @@ import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private ThingNode sentinel;
-    int size;
+    private int size;
 
     private class ThingNode {
         private ThingNode previous;
@@ -56,17 +56,17 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         if (this == other) {
             return true;
         }
-        if (other.getClass() != this.getClass()) {
-            return false;
-        }
+        /* if (other.getClass() != this.getClass()) {
+         *   return false;
+        } */
         LinkedListDeque<T> o = (LinkedListDeque<T>) other;
         if (o.size() != size()) {
             return false;
         }
         for (int i = 0; i < size(); i++) {
             T otherItem = o.get(i);
-            T thisItem = this.get(i);
-            if (otherItem != thisItem) {
+            T thisItem = get(i);
+            if (!otherItem.equals(thisItem)) {
                 return false;
             }
         }
