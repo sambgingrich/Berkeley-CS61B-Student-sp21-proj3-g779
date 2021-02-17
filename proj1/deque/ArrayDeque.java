@@ -166,6 +166,12 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             return true;
         }
 
+        LinkedListDeque<T> lld = new LinkedListDeque<>();
+        if (other.getClass() != lld.getClass() &
+                other.getClass() != this.getClass()) {
+            return false;
+        }
+
         Deque<T> o = (Deque<T>) other;
         if (o.size() != size()) {
             return false;
