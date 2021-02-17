@@ -3,7 +3,7 @@ import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private ThingNode sentinel;
-    private int size;
+    private static int size;
 
 
     private class ThingNode {
@@ -113,14 +113,14 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
      * If no such item exists, returns null.*/
     @Override
     public T removeFirst() {
-        if (sentinel.next == sentinel) {
+        if (size == 0) {
             return null;
         } else {
-            size -= 1;
-            T returnval = sentinel.next.item;
+            T returnVal = sentinel.next.item;
             sentinel.next = sentinel.next.next;
             sentinel.next.previous = sentinel;
-            return returnval;
+            size -= 1;
+            return returnVal;
         }
     }
 
@@ -128,14 +128,14 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
      * If no such item exists, returns null */
     @Override
     public T removeLast() {
-        if (sentinel.next == sentinel) {
+        if (size == 0) {
             return null;
         } else {
-            size -= 1;
-            T returnval = sentinel.previous.item;
+            T returnVal = sentinel.previous.item;
             sentinel.previous = sentinel.previous.previous;
             sentinel.previous.next = sentinel;
-            return returnval;
+            size -= 1;
+            return returnVal;
         }
     }
 

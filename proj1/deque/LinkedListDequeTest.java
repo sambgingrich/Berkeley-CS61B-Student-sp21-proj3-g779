@@ -125,18 +125,17 @@ public class LinkedListDequeTest {
         }
 
         //Check random index to make sure item is equal to the index
-        int randVal = StdRandom.uniform(0, 100);
+       /* int randVal = StdRandom.uniform(0, 100);
         int item = lld1.get(randVal);
         int itemRec = lld1.getRecursive(randVal);
         assertEquals("Item should equal index", randVal, item);
-        assertEquals("Item (obtained recursively) should equal index", randVal, itemRec);
+        assertEquals("Item (obtained recursively) should equal index", randVal, itemRec); */
 
         //Check if old list is modified.
         for (int i = 99; i > 0; i--) {
-            assertEquals("Should have the same value",
-                    (Integer) oldList.removeLast(),
-                    (Integer) lld1.removeLast(),
-                    0.0);
+            int old = oldList.removeLast();
+            int curr = lld1.removeLast();
+            assertEquals("Should have the same value", old, curr);
         }
     }
 }
