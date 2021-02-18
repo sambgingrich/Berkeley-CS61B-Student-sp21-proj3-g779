@@ -4,27 +4,29 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A:
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: After playing around with a lot of special cases that failed in my tests, I was finally able to come up with a system for the
+   array deque that wasn't the suggested circular implementation, but also still didn't need a lot of special cases. It's
+   still probably more complicated than it should be, though.
 
 Q: What's something that was particularly inelegant in your code, if anything?
-
 A:
 
 Q: What did you learn by talking to your partner about writing ArrayDeque?
 
-A:
+A: He helped clarify how Comparators and compare and max methods were supposed to fit together.
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: For the equals method, I wish that the "instanceof" keyword was described in the spec. I couldn't figure out how
+to check if the "other" object was an LLDeque or an ArrayDeque until I found that on ed.
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: I would probably try to implement the circular method suggested in the spec with a wraparound function.
 
 -----
 
@@ -32,11 +34,12 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: I didn't need a case for size 0 on the remove methods, I could just add a line that keeps the size >= 0. Not sure if this is better code, though.
+I think the special case for size 0 is easier to read/understand.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: My add and remove methods are very close to the staff implementation
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
@@ -48,7 +51,8 @@ A:
 
 Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
-A:
+A: For the equals method, I wish that the "instanceof" keyword was described in the spec. I couldn't figure out how
+   to check if the "other" object was an LLDeque or an ArrayDeque until I found that on ed.
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
@@ -60,4 +64,4 @@ Meta:
 
 Q: Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A:
