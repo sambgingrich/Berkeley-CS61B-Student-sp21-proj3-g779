@@ -15,7 +15,7 @@ import static capers.Utils.*;
 public class Dog implements Serializable {
 
     /** Folder that dogs live in. */
-    static final File DOG_FOLDER = join(".capers", "dogs");
+    static final File DOG_FOLDER = join(CAPERS_FOLDER,"dogs");
     /** Age of dog. */
     private int age;
     /** Breed of dog. */
@@ -42,10 +42,9 @@ public class Dog implements Serializable {
      * @return Dog read from file
      */
     public static Dog fromFile(String name) {
-       /* File newDogFile = join(DOG_FOLDER, name);
-        Dog d = readObject(newDogFile, Dog.class); */
-        Dog d = readObject(DOG_FOLDER, Dog.class);
-        //how to find dog with specific name???
+        File newDogFile = join(DOG_FOLDER, name);
+        Dog d = readObject(newDogFile, Dog.class);
+        //Dog d = readObject(DOG_FOLDER, Dog.class);
         return d;
     }
 
@@ -62,14 +61,14 @@ public class Dog implements Serializable {
      * Saves a dog to a file for future use.
      */
     public void saveDog() {
-        /*File newDogFile = join("dogs", this.name);
+        File newDogFile = join(DOG_FOLDER, this.name);
         try {
             newDogFile.createNewFile();
         } catch (IOException excp) {
             throw new IllegalArgumentException(excp.getMessage());
         }
-        writeObject(newDogFile,this);*/
-        writeObject(DOG_FOLDER, this);
+        writeObject(newDogFile,this);
+        //writeObject(DOG_FOLDER, this);
     }
 
     @Override

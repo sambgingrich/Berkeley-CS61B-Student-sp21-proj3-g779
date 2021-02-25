@@ -38,7 +38,7 @@ public class CapersRepository {
         CAPERS_FOLDER.mkdir();
         try {
             STORY_FOLDER.createNewFile();
-            DOG_FOLDER.createNewFile();
+            DOG_FOLDER.mkdir();
         } catch (IOException excp) {
             throw new IllegalArgumentException(excp.getMessage());
         }
@@ -76,5 +76,6 @@ public class CapersRepository {
     public static void celebrateBirthday(String name) {
         Dog d = Dog.fromFile(name);
         d.haveBirthday();
+        d.saveDog();
     }
 }
