@@ -1,7 +1,9 @@
 package capers;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import static capers.Dog.DOG_FOLDER;
 import static capers.Utils.*;
@@ -37,8 +39,8 @@ public class CapersRepository {
         try {
             STORY_FOLDER.createNewFile();
             DOG_FOLDER.createNewFile();
-        }catch(IOException ex) {
-            System.out.println("IOexception whatever that means");
+        } catch (IOException excp) {
+            throw new IllegalArgumentException(excp.getMessage());
         }
     }
 

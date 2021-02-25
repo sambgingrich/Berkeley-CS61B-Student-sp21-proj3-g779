@@ -3,6 +3,7 @@ package capers;
 //import net.sf.saxon.trans.SymbolicName;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 import static capers.CapersRepository.CAPERS_FOLDER;
@@ -14,7 +15,7 @@ import static capers.Utils.*;
 public class Dog implements Serializable {
 
     /** Folder that dogs live in. */
-    static final File DOG_FOLDER = join(CAPERS_FOLDER, "dogs");
+    static final File DOG_FOLDER = join(".capers", "dogs");
     /** Age of dog. */
     private int age;
     /** Breed of dog. */
@@ -41,8 +42,9 @@ public class Dog implements Serializable {
      * @return Dog read from file
      */
     public static Dog fromFile(String name) {
-        File newDogFile = join(DOG_FOLDER, name);
-        Dog d = readObject(newDogFile, Dog.class);
+       /* File newDogFile = join(DOG_FOLDER, name);
+        Dog d = readObject(newDogFile, Dog.class); */
+        Dog d = readObject(DOG_FOLDER, Dog.class);
         //how to find dog with specific name???
         return d;
     }
@@ -60,8 +62,14 @@ public class Dog implements Serializable {
      * Saves a dog to a file for future use.
      */
     public void saveDog() {
-        File newDogFile = join(DOG_FOLDER, name);
-        writeObject(newDogFile,this);
+        /*File newDogFile = join("dogs", this.name);
+        try {
+            newDogFile.createNewFile();
+        } catch (IOException excp) {
+            throw new IllegalArgumentException(excp.getMessage());
+        }
+        writeObject(newDogFile,this);*/
+        writeObject(DOG_FOLDER, this);
     }
 
     @Override
