@@ -3,12 +3,12 @@ package bstmap;
 /* A map that implements Map61B except
 * remove, iterator, and keySet
  */
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
 
+//@Source: Everything is essentially the same as the Princeton implementation given in the spec.
 public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
-    private BSTNode root;
+    public BSTNode root;
 
     /* Private nested class to facilitate creation of BST*/
     private class BSTNode{
@@ -24,21 +24,26 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
     }
 
+
     @Override
     /** Removes all of the mappings from this map. */
     public void clear(){
-        root.left = null;
-        root.right = null;
-        root.value = null;
-        root.key = null;
-        root.size = 0;
+        root = null;
     }
 
     @Override
     /* Returns true if this map contains a mapping for the specified key. */
     public boolean containsKey(K key){
        if (key == null) throw new IllegalArgumentException("argument containsKey is null");
-       return get(key) != null;
+       return containsKey(root, key);
+    }
+
+    private boolean containsKey(BSTNode x, K key) {
+        if (x == null) return false;
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0 ) return containsKey(x.left, key);
+        else if (cmp > 0) return containsKey(x.right, key);
+        else return true;
     }
 
     @Override
@@ -49,6 +54,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     private V get(BSTNode x, K key) {
+        if (x == null) return null;
         int cmp = key.compareTo(x.key);
         if (cmp < 0 ) return get(x.left, key);
         else if (cmp > 0) return get(x.right, key);
@@ -85,8 +91,8 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
         else {
             x.value = val;
-            x.size = 1 + size(x.left) + size(x.right);
         }
+        x.size = 1 + size(x.left) + size(x.right);
         return x;
     }
 
