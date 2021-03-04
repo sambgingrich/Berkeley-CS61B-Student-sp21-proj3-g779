@@ -8,7 +8,7 @@ import java.util.Set;
 
 //@Source: Everything is essentially the same as the Princeton implementation given in the spec.
 public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
-    public BSTNode root;
+    private BSTNode root;
 
     /* Private nested class to facilitate creation of BST*/
     private class BSTNode{
@@ -94,6 +94,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
         x.size = 1 + size(x.left) + size(x.right);
         return x;
+    }
+
+    public void printInOrder() {
     }
 
     //### Don't need to implement the following functions for full credit###
