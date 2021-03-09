@@ -1,8 +1,17 @@
 package gitlet;
 
+import edu.princeton.cs.algs4.ST;
+import org.checkerframework.checker.units.qual.C;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+
+import static gitlet.Repository.*;
+import static gitlet.Utils.*;
 
 /** Represents a gitlet commit object.
  *  This is a class that represents commits used in the repository class.
@@ -32,7 +41,7 @@ public class Commit implements Serializable {
     Date date;
     String parent; //the SHA1 hash of the parent commit, not a pointer to commit object.
     String message;
-    HashMap map;
+    HashMap<String, String> map;
 
 
     public Commit(String message, String parent, Date date) {
@@ -48,23 +57,47 @@ public class Commit implements Serializable {
         if (Repository.addMap.isEmpty() & Repository.removeMap.isEmpty()) {
             this.map = p.map;
         }
-        //Handle adding new mappings from Repository.addMap and removeMap here.
-
-
-
+        //Handle adding new mappings from Repository.addMap here.
+        //Source: Learned how to iterate through hashmap from geeksforgeeks.org
+        for (Map.Entry<String, String> entry  : addMap.entrySet()) {
+            String key = entry.getKey();
+            String val = entry.getValue();
+            this.map.put(key, val);
+        }
+        //Handle removing mappings from remove map
+        for (Map.Entry<String, String> entry  : removeMap.entrySet()) {
+            String key = entry.getKey();
+            String val = entry.getValue();
+            this.map.remove(key, val);
+        }
         //Advance head pointer
-        head = this; // Each branch has it's own HEAD...but keep this for now.
+        head = this; // Each branch has it's own HEAD??
         master = this; //Change this once we have to figure out merging.
-        //Write the commit to disk
+        //Write the commit to disk, persist HEAD and master pointers.
         saveCommit(this);
     }
 
     public void saveCommit(Commit c) {
         //setup persistence for commits.
+        String UID = Utils.sha1(c);
+        File newCommit = join(COMMITS_FOLDER, UID);
+        try {
+            newCommit.createNewFile();
+        } catch (IOException exception) {
+            throw new IllegalArgumentException(exception.getMessage());
+        }
+        writeObject(newCommit, c);
+        //Write the SHA1 hash of c into the HEAD and master files.
+        String headUID = sha1(head);
+        writeObject(HEAD_FILE, headUID);
+        String masterUID = sha1(master);
+        writeObject(MASTER_FILE, masterUID);
     }
 
     //Returns a Commit from disk with the given UID.
-    public Commit loadCommit(String parent) { //takes in UID
-        return this;
+    public Commit loadCommit(String UID) {
+        File loadFile = join(COMMITS_FOLDER, UID);
+        Commit c = readObject(loadFile, Commit.class);
+        return c;
     }
 }

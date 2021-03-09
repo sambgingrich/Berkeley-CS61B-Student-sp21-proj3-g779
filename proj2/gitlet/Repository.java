@@ -21,8 +21,8 @@ public class Repository {
      * comment above them describing what that variable represents and how that
      * variable is used. We've provided two examples for you.
      */
-    static HashMap addMap;
-    static HashMap removeMap;
+    static HashMap<String, String> addMap;
+    static HashMap<String, String> removeMap;
 
     /** The current working directory. */
     public static final File CWD = new File(System.getProperty("user.dir"));
@@ -33,6 +33,8 @@ public class Repository {
     public static final File STAGING_DIR = join(GITLET_DIR, "staging");
     public static final File ADD_FILE = join(GITLET_DIR, "staging");
     public static final File REMOVE_FILE = join(GITLET_DIR, "staging");
+    public static final File HEAD_FILE = join(GITLET_DIR, "head");
+    public static final File MASTER_FILE = join(GITLET_DIR, "master");
 
     public static void init(){
         //Check if there's a version control system already in the CWD.
@@ -42,8 +44,10 @@ public class Repository {
         //Make initial commit.
         Date epoch = new Date(0); //Hopefully this is the right date.
         Commit initial = new Commit("initial commit", null, epoch);
-        addMap = new HashMap();
-        removeMap = new HashMap();
+        addMap = new HashMap<> (3);
+        removeMap = new HashMap<> (3);
+
+        //Set up file structure so that gitlet persists.
         setupPersistence();
         writeObject(ADD_FILE, addMap);
         writeObject(REMOVE_FILE, removeMap);
@@ -52,17 +56,51 @@ public class Repository {
     private static void setupPersistence() {
         GITLET_DIR.mkdir();
         STAGING_DIR.mkdir();
+        BLOB_FOLDER.mkdir();
+        COMMITS_FOLDER.mkdir();
         try {
-            BLOB_FOLDER.createNewFile();
-            COMMITS_FOLDER.createNewFile();
             ADD_FILE.createNewFile();
             REMOVE_FILE.createNewFile();
+            HEAD_FILE.createNewFile();
+            MASTER_FILE.createNewFile();
+
         } catch (IOException excp) {
             throw new IllegalArgumentException(excp.getMessage());
         }
     }
 
-    public static void add() {
-        //implement the add function here.
+    private static Commit currentCommit(){
+        //Load current commit
+        String currentCommitID = readContentsAsString(HEAD_FILE);
+        File currentCommitFile = join(COMMITS_FOLDER, currentCommitID);
+        return readObject(currentCommitFile, Commit.class);
+    }
+
+    public static void add(String fileName) {
+        //Check if the file exists
+        File newFile = join(CWD, fileName);
+        if (!newFile.exists()) {
+            exitWithError("File does not exist.");
+        }
+        //Check if an identical SHA1-hash is in the current Commit
+        String UID = Utils.sha1(newFile);
+        Commit c = currentCommit();
+        if (c.map.containsKey(fileName) && c.map.get(fileName) == UID) {
+            if (addMap.containsKey(fileName) && c.map.get(fileName) == UID){
+                addMap.remove(fileName);
+            }
+            return;
+        }
+        //If it's not there, add it to the addMap
+        addMap.put(fileName, UID);
+        /* Save a snapshot of the file to the BLOBS_FOLDER
+        * with the SHA1 hash as the name of the file.
+         */
+        File newBlob = join(BLOB_FOLDER, UID);
+        try {
+            newBlob.createNewFile();
+        } catch (IOException exception) {
+            throw new IllegalArgumentException(exception.getMessage());
+        }
     }
 }
