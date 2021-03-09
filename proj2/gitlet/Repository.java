@@ -35,6 +35,11 @@ public class Repository {
     public static final File REMOVE_FILE = join(GITLET_DIR, "staging");
 
     public static void init(){
+        //Check if there's a version control system already in the CWD.
+        if (GITLET_DIR.exists()) {
+            exitWithError("A Gitlet version-control system already exists in the current directory.");
+        }
+        //Make initial commit.
         Date epoch = new Date(0); //Hopefully this is the right date.
         Commit initial = new Commit("initial commit", null, epoch);
         addMap = new HashMap();

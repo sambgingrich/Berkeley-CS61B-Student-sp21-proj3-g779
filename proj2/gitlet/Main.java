@@ -18,8 +18,7 @@ public class Main {
         Repository.init();
         switch(firstArg) {
             case "init":
-                // All of this function should be in the Repository
-
+                Repository.init();
                 break;
             case "add":
                 // TODO: handle the `add [filename]` command
