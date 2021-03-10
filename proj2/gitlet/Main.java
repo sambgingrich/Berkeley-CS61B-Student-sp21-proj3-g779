@@ -1,5 +1,7 @@
 package gitlet;
 
+import static gitlet.Utils.exitWithError;
+
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
  */
@@ -12,33 +14,22 @@ public class Main {
         if (args.length == 0) {
             Utils.exitWithError("Must have at least one argument");
         }
+        Repository.setupPersistence();
         String firstArg = args[0];
         Repository.init();
         switch(firstArg) {
             case "init":
-                validateNumArgs("init", args, 0);
                 Repository.init();
                 break;
             case "add":
-                validateNumArgs("add", args, 2);
-                Repository.add(args[2]);
+                Repository.add(args[1]);
                 break;
-            // TODO: FILL THE REST IN
+            case "commit":
+                if (args.length == 1 || args[1].isEmpty()) {
+                    exitWithError("Please enter a commit message.");
+                }
+                Repository.commit(args[1]);
         }
     }
 
-    /**
-     * Checks the number of arguments versus the expected number,
-     * throws a RuntimeException if they do not match.
-     * Source: Lab6 skeleton
-     * @param cmd Name of command you are validating
-     * @param args Argument array from command line
-     * @param n Number of expected arguments
-     */
-    public static void validateNumArgs(String cmd, String[] args, int n) {
-        if (args.length != n) {
-            throw new RuntimeException(
-                    String.format("Invalid number of arguments for: %s.", cmd));
-        }
-    }
 }

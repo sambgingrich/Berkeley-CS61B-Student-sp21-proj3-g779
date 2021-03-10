@@ -1,8 +1,5 @@
 package gitlet;
 
-import edu.princeton.cs.algs4.ST;
-import org.checkerframework.checker.units.qual.C;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -62,14 +59,21 @@ public class Commit implements Serializable {
         for (Map.Entry<String, String> entry  : addMap.entrySet()) {
             String key = entry.getKey();
             String val = entry.getValue();
-            this.map.put(key, val);
+            //Case where the file name is already in the parent map.
+            if (p.map.replace(key, val) == null) {
+                p.map.put(key, val); //Case where the filename wasn't in the parent map.
+            }
         }
         //Handle removing mappings from remove map
         for (Map.Entry<String, String> entry  : removeMap.entrySet()) {
             String key = entry.getKey();
             String val = entry.getValue();
-            this.map.remove(key, val);
+            p.map.remove(key, val);
         }
+        this.map = p.map;
+        //Clear the add and remove maps
+        addMap.clear();
+        removeMap.clear();
         //Advance head pointer
         head = this; // Each branch has it's own HEAD??
         master = this; //Change this once we have to figure out merging.

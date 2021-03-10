@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -23,6 +24,8 @@ public class Repository {
      */
     static HashMap<String, String> addMap;
     static HashMap<String, String> removeMap;
+    //How to format the date from Stack Overflow.
+    static SimpleDateFormat formatForDates = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z" );
 
     /** The current working directory. */
     public static final File CWD = new File(System.getProperty("user.dir"));
@@ -37,23 +40,24 @@ public class Repository {
     public static final File MASTER_FILE = join(GITLET_DIR, "master");
 
     public static void init(){
-        //Check if there's a version control system already in the CWD.
-        if (GITLET_DIR.exists()) {
-            exitWithError("A Gitlet version-control system already exists in the current directory.");
-        }
         //Make initial commit.
         Date epoch = new Date(0); //Hopefully this is the right date.
-        Commit initial = new Commit("initial commit", null, epoch);
+        new Commit("initial commit", null, epoch);
         addMap = new HashMap<> (3);
         removeMap = new HashMap<> (3);
 
         //Set up file structure so that gitlet persists.
         setupPersistence();
-        writeObject(ADD_FILE, addMap);
-        writeObject(REMOVE_FILE, removeMap);
+        //Figure out persistence for staging area if necessary, the following doesn't work.
+        //writeObject(ADD_FILE, addMap);
+        //writeObject(REMOVE_FILE, removeMap);
     }
 
-    private static void setupPersistence() {
+    public static void setupPersistence() {
+        /*Check if there's a version control system already in the CWD.
+        if (GITLET_DIR.exists()) {
+            exitWithError("A Gitlet version-control system already exists in the current directory.");
+        }*/
         GITLET_DIR.mkdir();
         STAGING_DIR.mkdir();
         BLOB_FOLDER.mkdir();
@@ -102,5 +106,17 @@ public class Repository {
         } catch (IOException exception) {
             throw new IllegalArgumentException(exception.getMessage());
         }
+    }
+
+    public static void commit(String message) {
+        //Catch failure cases here
+        if (addMap.isEmpty() && removeMap.isEmpty()) {
+            exitWithError("No changes added to the commit.");
+        }
+        //Load date and UID of current (now parent) commit
+        Date today = new Date();
+        String currentCommitID = readContentsAsString(HEAD_FILE);
+        //Commit
+        new Commit(message, currentCommitID, today);
     }
 }
