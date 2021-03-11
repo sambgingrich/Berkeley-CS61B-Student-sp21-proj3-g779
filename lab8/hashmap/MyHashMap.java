@@ -107,16 +107,19 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         while(keypos.hasNext()) {
             Node nextNode = new Node(keypos.next(), get(keypos.next()));
             //Get which bucket to put into
-            int bucket = bucketNumber(nextNode.key);
+            int bucket = bucketNumber(nextNode.key, newArraySize);
             //Make the key and val into a node
             //Put it into that bucket
             newBuckets[bucket].add(nextNode);
         }
+        buckets = newBuckets;
         arraySize = newArraySize;
     }
 
-    private int bucketNumber(K key) {
-        return key.hashCode() % arraySize;
+    private int bucketNumber(K key, int numbuckets) {
+        int code = key.hashCode();
+        int bucket = Math.floorMod(code, numbuckets);
+        return bucket;
     }
 
     @Override
@@ -151,7 +154,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     @Override
     public void put(K key, V value) {
         //Get which bucket to put into
-        int bucket = bucketNumber(key);
+        int bucket = bucketNumber(key, arraySize);
         //Make the key and val into a node
         Node n = new Node(key, value);
         //Put it into that bucket
