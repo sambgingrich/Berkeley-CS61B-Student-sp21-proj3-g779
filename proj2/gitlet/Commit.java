@@ -75,6 +75,7 @@ public class Commit implements Serializable {
         //In the case of the initial commit.
         if (parent == null) {
             this.BRANCH_FILE = master;
+            this.map = new HashMap<>(5);
         }
         saveCommit(this);
     }
@@ -90,9 +91,9 @@ public class Commit implements Serializable {
             throw new IllegalArgumentException(exception.getMessage());
         }
         writeObject(newCommit, c);
-        //Write the SHA1 hash of c into the HEAD and branch files.
-        writeObject(HEAD_FILE, UID);
-        writeObject(BRANCH_FILE, UID);
+        //Write the SHA1 hash of c into the HEAD and branch files once they are cleared.
+        writeContents(HEAD_FILE, UID);
+        writeContents(BRANCH_FILE, UID);
     }
 
     //Returns a Commit from disk with the given UID.

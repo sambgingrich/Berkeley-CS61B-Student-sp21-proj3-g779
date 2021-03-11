@@ -2,9 +2,8 @@ package gitlet;
 
 import java.awt.*;
 
-import static gitlet.Utils.exitWithError;
-import static gitlet.Utils.readObject;
 import static gitlet.Repository.*;
+import static gitlet.Utils.*;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
@@ -34,7 +33,8 @@ public class Main {
                 }
             case "checkout":
                 if (args.length == 3) {
-                    Commit head = readObject(HEAD_FILE, Commit.class);
+                    String headUID = readContentsAsString(HEAD_FILE);
+                    Commit head = Commit.loadCommit(headUID);
                     /*check failure case
                     if (!head.map.containsKey(args[2])) {
                         exitWithError("File does not exist in that commit.");

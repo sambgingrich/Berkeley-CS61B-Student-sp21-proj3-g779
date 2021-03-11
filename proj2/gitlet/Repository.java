@@ -34,8 +34,8 @@ public class Repository {
     public static final File BLOB_FOLDER = join(GITLET_DIR, "blobs");
     public static final File COMMITS_FOLDER = join(GITLET_DIR, "commits");
     public static final File STAGING_DIR = join(GITLET_DIR, "staging");
-    public static final File ADD_FILE = join(GITLET_DIR, "staging");
-    public static final File REMOVE_FILE = join(GITLET_DIR, "staging");
+    public static final File ADD_FILE = join(STAGING_DIR, "add");
+    public static final File REMOVE_FILE = join(STAGING_DIR, "remove");
     public static final File HEAD_FILE = join(GITLET_DIR, "head");
     public static final File master = join(GITLET_DIR, "master");
 
@@ -49,29 +49,20 @@ public class Repository {
         STAGING_DIR.mkdir();
         BLOB_FOLDER.mkdir();
         COMMITS_FOLDER.mkdir();
-        try {
-            ADD_FILE.createNewFile();
-            REMOVE_FILE.createNewFile();
-            HEAD_FILE.createNewFile();
-            master.createNewFile();
-
-        } catch (IOException excp) {
-            throw new IllegalArgumentException(excp.getMessage());
-        }
     }
 
     public static void init(){
         //Set up file structure so that gitlet persists.
         setupPersistence();
-        //Figure out persistence for staging area if necessary, the following doesn't work.
-        //writeObject(ADD_FILE, addMap);
-        //writeObject(REMOVE_FILE, removeMap);
 
         //Make initial commit.
         Date epoch = new Date(0); //This is the right date, use date format when outputting logs.
         Commit initial = new Commit("initial commit", null, epoch);
         addMap = new HashMap<> (3);
         removeMap = new HashMap<> (3);
+
+        writeObject(ADD_FILE, addMap);
+        writeObject(REMOVE_FILE, removeMap);
     }
 
 
@@ -89,29 +80,34 @@ public class Repository {
         if (!newFile.exists()) {
             exitWithError("File does not exist.");
         }
+        //Load addMap
+        addMap = readObject(ADD_FILE, HashMap.class);
         //Check if an identical SHA1-hash is in the current Commit
-        String UID = Utils.sha1(readContents(newFile));
+        byte[] contents = readContents(newFile);
+        String UID = Utils.sha1(contents);
         Commit c = currentCommit();
-        if (c.map.containsKey(fileName) && c.map.get(fileName).equals(UID)) {
+        if (c.map != null && c.map.containsKey(fileName)
+                && c.map.get(fileName).equals(UID)) {
             if (addMap.containsKey(fileName) && c.map.get(fileName).equals(UID)){
                 addMap.remove(fileName);
             }
+            writeObject(ADD_FILE, addMap);
             return;
         }
         //If it's not there, add it to the addMap
         addMap.put(fileName, UID);
+        writeObject(ADD_FILE, addMap);
         /* Save a snapshot of the file to the BLOBS_FOLDER
         * with the SHA1 hash as the name of the file.
          */
         File newBlob = join(BLOB_FOLDER, UID);
-        try {
-            newBlob.createNewFile();
-        } catch (IOException exception) {
-            throw new IllegalArgumentException(exception.getMessage());
-        }
+        writeContents(newBlob, contents);
     }
 
     public static void commit(String message) {
+        //Load addMap
+        addMap = readObject(ADD_FILE, HashMap.class);
+        removeMap = readObject(REMOVE_FILE, HashMap.class);
         //Catch failure cases here
         if (addMap.isEmpty() && removeMap.isEmpty()) {
             exitWithError("No changes added to the commit.");
@@ -128,8 +124,9 @@ public class Repository {
     public static void checkout(Commit c, String fileName) {
         String blobUID = c.map.get(fileName);
         File blobFile = join(BLOB_FOLDER, blobUID);
+        byte[] contents = readContents(blobFile);
         File CWDFile = join(CWD, fileName);
-        blobFile.renameTo(CWDFile);
+        writeContents(CWDFile, contents);
     }
 
 
