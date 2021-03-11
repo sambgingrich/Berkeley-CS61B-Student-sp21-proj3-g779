@@ -19,6 +19,8 @@ public class Main {
         }
         String firstArg = args[0];
         switch(firstArg) {
+            case "log":
+                log();
             case "init":
                 init();
                 break;

@@ -40,10 +40,10 @@ public class Repository {
     public static final File master = join(GITLET_DIR, "master");
 
     private static void setupPersistence() {
-        /*Check if there's a version control system already in the CWD.*/
+        /*Check if there's a version control system already in the CWD.
         if (GITLET_DIR.exists()) {
             exitWithError("A Gitlet version-control system already exists in the current directory.");
-        }
+        }*/
         //Make all the files and directories
         GITLET_DIR.mkdir();
         STAGING_DIR.mkdir();
@@ -130,4 +130,24 @@ public class Repository {
     }
 
 
+    //Space here for branchCheckout
+
+    public static void log() {
+        String headUID = readContentsAsString(HEAD_FILE);
+        loghelp(headUID);
+    }
+
+    private static void loghelp (String curr) {
+        Commit c = Commit.loadCommit(curr);
+        System.out.println("===");
+        System.out.println("commit " + curr);
+        System.out.println("Date: " + formatForDates.format(c.date));
+        System.out.println(c.message);
+        System.out.println();
+        if (c.parent == null) {
+            return;
+        } else {
+            loghelp(c.parent);
+        }
+    }
 }
