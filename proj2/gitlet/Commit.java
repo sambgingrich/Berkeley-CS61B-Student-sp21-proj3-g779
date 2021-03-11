@@ -29,61 +29,60 @@ import static gitlet.Utils.*;
  *  @author Samuel Gingrich
  */
 public class Commit implements Serializable {
-
-    //Static variables for now, but have to find a way to use references to save the head commit and master branch.
-    static Commit head;
-    static Commit master;
-
     //instance variables
     Date date;
     String parent; //the SHA1 hash of the parent commit, not a pointer to commit object.
     String message;
     HashMap<String, String> map;
+    File BRANCH_FILE;
 
 
     public Commit(String message, String parent, Date date) {
         this.message = message;
         this.parent = parent;
         this.date = date;
-        if (parent == null) { //In the case of the parent commit
-            return;
-        }
-        //Load parent node
-        Commit p = loadCommit(parent);
-        //In the case that there is nothing staged to be added or removed.
-        if (Repository.addMap.isEmpty() & Repository.removeMap.isEmpty()) {
-            this.map = p.map;
-        }
-        //Handle adding new mappings from Repository.addMap here.
-        //Source: Learned how to iterate through hashmap from geeksforgeeks.org
-        for (Map.Entry<String, String> entry  : addMap.entrySet()) {
-            String key = entry.getKey();
-            String val = entry.getValue();
-            //Case where the file name is already in the parent map.
-            if (p.map.replace(key, val) == null) {
-                p.map.put(key, val); //Case where the filename wasn't in the parent map.
+        if (parent != null) { //In the case of the initial commit
+            //Load parent node
+            Commit p = loadCommit(parent);
+            //Set branch to parent's branch
+            this.BRANCH_FILE = p.BRANCH_FILE;
+            //In the case that there is nothing staged to be added or removed.
+            if (Repository.addMap.isEmpty() & Repository.removeMap.isEmpty()) {
+                this.map = p.map;
             }
+            //Handle adding new mappings from Repository.addMap here.
+            //Source: Learned how to iterate through hashmap from geeksforgeeks.org
+            for (Map.Entry<String, String> entry : addMap.entrySet()) {
+                String key = entry.getKey();
+                String val = entry.getValue();
+                //Case where the file name is already in the parent map.
+                if (p.map.replace(key, val) == null) {
+                    p.map.put(key, val); //Case where the filename wasn't in the parent map.
+                }
+            }
+            //Handle removing mappings from remove map
+            for (Map.Entry<String, String> entry : removeMap.entrySet()) {
+                String key = entry.getKey();
+                String val = entry.getValue();
+                p.map.remove(key, val);
+            }
+            this.map = p.map;
+            //Clear the add and remove maps
+            addMap.clear();
+            removeMap.clear();
+            //Write the commit to disk, persist HEAD and master pointers
         }
-        //Handle removing mappings from remove map
-        for (Map.Entry<String, String> entry  : removeMap.entrySet()) {
-            String key = entry.getKey();
-            String val = entry.getValue();
-            p.map.remove(key, val);
+        //In the case of the initial commit.
+        if (parent == null) {
+            this.BRANCH_FILE = master;
         }
-        this.map = p.map;
-        //Clear the add and remove maps
-        addMap.clear();
-        removeMap.clear();
-        //Advance head pointer
-        head = this; // Each branch has it's own HEAD??
-        master = this; //Change this once we have to figure out merging.
-        //Write the commit to disk, persist HEAD and master pointers.
         saveCommit(this);
     }
 
     public void saveCommit(Commit c) {
         //setup persistence for commits.
-        String UID = Utils.sha1(c);
+        byte[] cAsByte = serialize(c);
+        String UID = Utils.sha1(cAsByte);
         File newCommit = join(COMMITS_FOLDER, UID);
         try {
             newCommit.createNewFile();
@@ -91,16 +90,18 @@ public class Commit implements Serializable {
             throw new IllegalArgumentException(exception.getMessage());
         }
         writeObject(newCommit, c);
-        //Write the SHA1 hash of c into the HEAD and master files.
-        String headUID = sha1(head);
-        writeObject(HEAD_FILE, headUID);
-        String masterUID = sha1(master);
-        writeObject(MASTER_FILE, masterUID);
+        //Write the SHA1 hash of c into the HEAD and branch files.
+        writeObject(HEAD_FILE, UID);
+        writeObject(BRANCH_FILE, UID);
     }
 
     //Returns a Commit from disk with the given UID.
-    public Commit loadCommit(String UID) {
+    public static Commit loadCommit(String UID) {
         File loadFile = join(COMMITS_FOLDER, UID);
+        /*Check if the file exists
+        if (!loadFile.exists()) {
+            exitWithError("No commit with that id exists.");
+        }*/
         Commit c = readObject(loadFile, Commit.class);
         return c;
     }

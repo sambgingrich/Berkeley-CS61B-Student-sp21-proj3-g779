@@ -37,27 +37,14 @@ public class Repository {
     public static final File ADD_FILE = join(GITLET_DIR, "staging");
     public static final File REMOVE_FILE = join(GITLET_DIR, "staging");
     public static final File HEAD_FILE = join(GITLET_DIR, "head");
-    public static final File MASTER_FILE = join(GITLET_DIR, "master");
+    public static final File master = join(GITLET_DIR, "master");
 
-    public static void init(){
-        //Make initial commit.
-        Date epoch = new Date(0); //Hopefully this is the right date.
-        new Commit("initial commit", null, epoch);
-        addMap = new HashMap<> (3);
-        removeMap = new HashMap<> (3);
-
-        //Set up file structure so that gitlet persists.
-        setupPersistence();
-        //Figure out persistence for staging area if necessary, the following doesn't work.
-        //writeObject(ADD_FILE, addMap);
-        //writeObject(REMOVE_FILE, removeMap);
-    }
-
-    public static void setupPersistence() {
-        /*Check if there's a version control system already in the CWD.
+    private static void setupPersistence() {
+        /*Check if there's a version control system already in the CWD.*/
         if (GITLET_DIR.exists()) {
             exitWithError("A Gitlet version-control system already exists in the current directory.");
-        }*/
+        }
+        //Make all the files and directories
         GITLET_DIR.mkdir();
         STAGING_DIR.mkdir();
         BLOB_FOLDER.mkdir();
@@ -66,12 +53,28 @@ public class Repository {
             ADD_FILE.createNewFile();
             REMOVE_FILE.createNewFile();
             HEAD_FILE.createNewFile();
-            MASTER_FILE.createNewFile();
+            master.createNewFile();
 
         } catch (IOException excp) {
             throw new IllegalArgumentException(excp.getMessage());
         }
     }
+
+    public static void init(){
+        //Set up file structure so that gitlet persists.
+        setupPersistence();
+        //Figure out persistence for staging area if necessary, the following doesn't work.
+        //writeObject(ADD_FILE, addMap);
+        //writeObject(REMOVE_FILE, removeMap);
+
+        //Make initial commit.
+        Date epoch = new Date(0); //This is the right date, use date format when outputting logs.
+        Commit initial = new Commit("initial commit", null, epoch);
+        addMap = new HashMap<> (3);
+        removeMap = new HashMap<> (3);
+    }
+
+
 
     private static Commit currentCommit(){
         //Load current commit
@@ -87,10 +90,10 @@ public class Repository {
             exitWithError("File does not exist.");
         }
         //Check if an identical SHA1-hash is in the current Commit
-        String UID = Utils.sha1(newFile);
+        String UID = Utils.sha1(readContents(newFile));
         Commit c = currentCommit();
-        if (c.map.containsKey(fileName) && c.map.get(fileName) == UID) {
-            if (addMap.containsKey(fileName) && c.map.get(fileName) == UID){
+        if (c.map.containsKey(fileName) && c.map.get(fileName).equals(UID)) {
+            if (addMap.containsKey(fileName) && c.map.get(fileName).equals(UID)){
                 addMap.remove(fileName);
             }
             return;
@@ -119,4 +122,15 @@ public class Repository {
         //Commit
         new Commit(message, currentCommitID, today);
     }
+
+    /* For cases 1: Checkout a given file from the head
+    * and 2: Checkout a given filename from a given commit ID */
+    public static void checkout(Commit c, String fileName) {
+        String blobUID = c.map.get(fileName);
+        File blobFile = join(BLOB_FOLDER, blobUID);
+        File CWDFile = join(CWD, fileName);
+        blobFile.renameTo(CWDFile);
+    }
+
+
 }
