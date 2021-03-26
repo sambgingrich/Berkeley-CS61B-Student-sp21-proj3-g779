@@ -158,15 +158,20 @@ public class Repository {
 
     private static void loghelp (String curr) {
         Commit c = Commit.loadCommit(curr);
-        System.out.println("===");
-        System.out.println("commit " + curr);
-        System.out.println("Date: " + formatForDates.format(c.date));
-        System.out.println(c.message);
-        System.out.println();
+        logmessage(curr);
         if (c.parent == null) {
             return;
         } else {
             loghelp(c.parent);
         }
+    }
+
+    private static void logmessage (String curr) {
+        Commit c = Commit.loadCommit(curr);
+        System.out.println("===");
+        System.out.println("commit " + curr);
+        System.out.println("Date: " + formatForDates.format(c.date));
+        System.out.println(c.message);
+        System.out.println();
     }
 }
