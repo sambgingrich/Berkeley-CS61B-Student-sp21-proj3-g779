@@ -1,7 +1,6 @@
 package gitlet;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +36,8 @@ public class Repository {
     public static final File ADD_FILE = join(STAGING_DIR, "add");
     public static final File REMOVE_FILE = join(STAGING_DIR, "remove");
     public static final File HEAD_FILE = join(GITLET_DIR, "head");
-    public static final File master = join(GITLET_DIR, "master");
+    public static final File BRANCHES_DIR = join(GITLET_DIR, "branches");
+    public static final File master = join(BRANCHES_DIR, "master");
 
     private static void setupPersistence() {
         /*Check if there's a version control system already in the CWD.
@@ -150,4 +150,12 @@ public class Repository {
             loghelp(c.parent);
         }
     }
+
+
+    /* Branch command creates new file with the name
+    of the the new branch and the sha-1 hash of the head
+    commit.
+     */
+
+
 }
