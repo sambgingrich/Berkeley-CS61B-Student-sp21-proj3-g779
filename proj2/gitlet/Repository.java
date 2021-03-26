@@ -159,7 +159,7 @@ public class Repository {
 
     private static void loghelp (String curr) {
         Commit c = Commit.loadCommit(curr);
-        logmessage(curr);
+        logMessage(curr);
         if (c.parent == null) {
             return;
         } else {
@@ -167,7 +167,7 @@ public class Repository {
         }
     }
 
-    private static void logmessage (String curr) {
+    private static void logMessage (String curr) {
         Commit c = Commit.loadCommit(curr);
         System.out.println("===");
         System.out.println("commit " + curr);
@@ -176,10 +176,10 @@ public class Repository {
         System.out.println();
     }
 
-    public static void globallog() {
+    public static void globalLog() {
         List<String> commitsList = plainFilenamesIn(COMMITS_FOLDER);
         for (String c : commitsList) {
-            logmessage(c);
+            logMessage(c);
         }
     }
 }

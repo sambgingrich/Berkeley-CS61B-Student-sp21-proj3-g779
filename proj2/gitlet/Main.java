@@ -11,7 +11,9 @@ import static gitlet.Utils.*;
 public class Main {
 
     /** Usage: java gitlet.Main ARGS, where ARGS contains
-     *  <COMMAND> <OPERAND1> <OPERAND2> ... 
+     *  <COMMAND> <OPERAND1> <OPERAND2> ...
+     *  For some reason it only works if you add new cases near the top,
+     *  it doesn't like it when you add them at the end.
      */
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -19,6 +21,9 @@ public class Main {
         }
         String firstArg = args[0];
         switch(firstArg) {
+            /* global log */
+            case "global-log":
+                globalLog();
             case "log":
                 log();
             case "init":
@@ -27,6 +32,16 @@ public class Main {
             case "add":
                 add(args[1]);
                 break;
+            case "rm-branch":
+                File branchFile = join(BRANCHES_DIR, args[1]);
+                if (!branchFile.exists()) {
+                    exitWithError("A branch with that name does not exists.");
+                } else if
+                (readContentsAsString(branchFile).equals(readContentsAsString(HEAD_FILE))) {
+                    exitWithError("Cannot remove the current branch");
+                } else {
+                    branchFile.delete();
+                }
             case "rm":
                 rm(args[1]);
             case "commit":
@@ -67,18 +82,6 @@ public class Main {
                     String headUID = readContentsAsString(HEAD_FILE);
                     writeContents(branchName, headUID);
                 }
-            /*case "rm-branch":
-                File branchFile = join(BRANCHES_DIR, args[1]);
-                if (!branchFile.exists()) {
-                    exitWithError("A branch with that name does not exists.");
-                } else if
-                (readContentsAsString(branchFile).equals(readContentsAsString(HEAD_FILE))) {
-                    exitWithError("Cannot remove the current branch");
-                } else {
-                    branchFile.delete();
-                }*/
-            case "global-log":
-                globallog();
         }
     }
 
