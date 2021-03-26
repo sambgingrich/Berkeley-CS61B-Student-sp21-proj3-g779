@@ -49,6 +49,7 @@ public class Repository {
         STAGING_DIR.mkdir();
         BLOB_FOLDER.mkdir();
         COMMITS_FOLDER.mkdir();
+        BRANCHES_DIR.mkdir();
     }
 
     public static void init(){
@@ -104,6 +105,12 @@ public class Repository {
         writeContents(newBlob, contents);
     }
 
+    public static void rm(String filename) {
+        /*Check failure case where the file is not in addMap
+        or map or current commit */
+
+    }
+
     public static void commit(String message) {
         //Load addMap
         addMap = readObject(ADD_FILE, HashMap.class);
@@ -150,12 +157,4 @@ public class Repository {
             loghelp(c.parent);
         }
     }
-
-
-    /* Branch command creates new file with the name
-    of the the new branch and the sha-1 hash of the head
-    commit.
-     */
-
-
 }
