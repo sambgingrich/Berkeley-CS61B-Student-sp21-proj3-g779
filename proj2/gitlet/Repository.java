@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static gitlet.Utils.*;
 
@@ -173,5 +174,12 @@ public class Repository {
         System.out.println("Date: " + formatForDates.format(c.date));
         System.out.println(c.message);
         System.out.println();
+    }
+
+    public static void globallog() {
+        List<String> commitsList = plainFilenamesIn(COMMITS_FOLDER);
+        for (String c : commitsList) {
+            logmessage(c);
+        }
     }
 }

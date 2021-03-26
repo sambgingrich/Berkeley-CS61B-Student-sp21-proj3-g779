@@ -67,7 +67,7 @@ public class Main {
                     String headUID = readContentsAsString(HEAD_FILE);
                     writeContents(branchName, headUID);
                 }
-            case "rm-branch":
+            /*case "rm-branch":
                 File branchFile = join(BRANCHES_DIR, args[1]);
                 if (!branchFile.exists()) {
                     exitWithError("A branch with that name does not exists.");
@@ -76,9 +76,9 @@ public class Main {
                     exitWithError("Cannot remove the current branch");
                 } else {
                     branchFile.delete();
-                }
-            //case "status":
-
+                }*/
+            case "global-log":
+                globallog();
         }
     }
 
