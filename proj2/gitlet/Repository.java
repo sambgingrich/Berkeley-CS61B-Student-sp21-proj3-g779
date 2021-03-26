@@ -108,7 +108,19 @@ public class Repository {
     public static void rm(String filename) {
         /*Check failure case where the file is not in addMap
         or map or current commit */
-
+        addMap = readObject(ADD_FILE, HashMap.class);
+        Commit c = currentCommit();
+        File removeFile = join(CWD, filename);
+        if (addMap.containsKey(filename)) {
+            addMap.remove(filename);
+            removeFile.delete();
+        } else if (c.map.containsKey(filename)) {
+            removeMap = readObject(REMOVE_FILE, HashMap.class);
+            removeMap.put(filename, null);
+            removeFile.delete();
+        } else {
+            exitWithError("No reason to remove the file.");
+        }
     }
 
     public static void commit(String message) {

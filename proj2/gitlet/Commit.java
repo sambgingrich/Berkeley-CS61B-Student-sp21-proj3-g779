@@ -63,8 +63,7 @@ public class Commit implements Serializable {
             //Handle removing mappings from remove map
             for (Map.Entry<String, String> entry : removeMap.entrySet()) {
                 String key = entry.getKey();
-                String val = entry.getValue();
-                p.map.remove(key, val);
+                p.map.remove(key);
             }
             this.map = p.map;
             //Clear the add and remove maps
