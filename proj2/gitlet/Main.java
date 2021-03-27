@@ -7,6 +7,7 @@ import static gitlet.Utils.*;
 import static gitlet.Log.*;
 import static gitlet.AddRemove.*;
 import static gitlet.Checkout.*;
+import static gitlet.Status.*;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
@@ -28,6 +29,8 @@ public class Main {
                 globalLog();
             case "find":
                 find(args[1]);
+            case "status":
+                status();
             case "log":
                 log();
             case "init":
