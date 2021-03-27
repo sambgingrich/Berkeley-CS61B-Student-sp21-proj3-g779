@@ -4,6 +4,9 @@ import java.io.File;
 
 import static gitlet.Repository.*;
 import static gitlet.Utils.*;
+import static gitlet.Log.*;
+import static gitlet.AddRemove.*;
+import static gitlet.Checkout.*;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
@@ -12,7 +15,7 @@ public class Main {
 
     /** Usage: java gitlet.Main ARGS, where ARGS contains
      *  <COMMAND> <OPERAND1> <OPERAND2> ...
-     *  For some reason it only works if you add new cases near the top,
+     *  For some reason it only works if you add new cases above the log case,
      *  it doesn't like it when you add them at the end.
      */
     public static void main(String[] args) {
@@ -21,9 +24,10 @@ public class Main {
         }
         String firstArg = args[0];
         switch(firstArg) {
-            /* global log */
             case "global-log":
                 globalLog();
+            case "find":
+                find(args[1]);
             case "log":
                 log();
             case "init":

@@ -67,61 +67,11 @@ public class Repository {
         writeObject(REMOVE_FILE, removeMap);
     }
 
-
-
-    private static Commit currentCommit(){
+    public static Commit currentCommit(){
         //Load current commit
         String currentCommitID = readContentsAsString(HEAD_FILE);
         File currentCommitFile = join(COMMITS_FOLDER, currentCommitID);
         return readObject(currentCommitFile, Commit.class);
-    }
-
-    public static void add(String fileName) {
-        //Check if the file exists
-        File newFile = join(CWD, fileName);
-        if (!newFile.exists()) {
-            exitWithError("File does not exist.");
-        }
-        //Load addMap
-        addMap = readObject(ADD_FILE, HashMap.class);
-        //Check if an identical SHA1-hash is in the current Commit
-        byte[] contents = readContents(newFile);
-        String UID = Utils.sha1(contents);
-        Commit c = currentCommit();
-        if (c.map != null && c.map.containsKey(fileName)
-                && c.map.get(fileName).equals(UID)) {
-            if (addMap.containsKey(fileName) && c.map.get(fileName).equals(UID)){
-                addMap.remove(fileName);
-            }
-            writeObject(ADD_FILE, addMap);
-            return;
-        }
-        //If it's not there, add it to the addMap
-        addMap.put(fileName, UID);
-        writeObject(ADD_FILE, addMap);
-        /* Save a snapshot of the file to the BLOBS_FOLDER
-        * with the SHA1 hash as the name of the file.
-         */
-        File newBlob = join(BLOB_FOLDER, UID);
-        writeContents(newBlob, contents);
-    }
-
-    public static void rm(String filename) {
-        /*Check failure case where the file is not in addMap
-        or map or current commit */
-        addMap = readObject(ADD_FILE, HashMap.class);
-        Commit c = currentCommit();
-        File removeFile = join(CWD, filename);
-        if (addMap.containsKey(filename)) {
-            addMap.remove(filename);
-            removeFile.delete();
-        } else if (c.map.containsKey(filename)) {
-            removeMap = readObject(REMOVE_FILE, HashMap.class);
-            removeMap.put(filename, null);
-            removeFile.delete();
-        } else {
-            exitWithError("No reason to remove the file.");
-        }
     }
 
     public static void commit(String message) {
@@ -137,49 +87,5 @@ public class Repository {
         String currentCommitID = readContentsAsString(HEAD_FILE);
         //Commit
         new Commit(message, currentCommitID, today);
-    }
-
-    /* For cases 1: Checkout a given file from the head
-    * and 2: Checkout a given filename from a given commit ID */
-    public static void checkout(Commit c, String fileName) {
-        String blobUID = c.map.get(fileName);
-        File blobFile = join(BLOB_FOLDER, blobUID);
-        byte[] contents = readContents(blobFile);
-        File CWDFile = join(CWD, fileName);
-        writeContents(CWDFile, contents);
-    }
-
-
-    //Space here for branchCheckout
-
-    public static void log() {
-        String headUID = readContentsAsString(HEAD_FILE);
-        loghelp(headUID);
-    }
-
-    private static void loghelp (String curr) {
-        Commit c = Commit.loadCommit(curr);
-        logMessage(curr);
-        if (c.parent == null) {
-            return;
-        } else {
-            loghelp(c.parent);
-        }
-    }
-
-    private static void logMessage (String curr) {
-        Commit c = Commit.loadCommit(curr);
-        System.out.println("===");
-        System.out.println("commit " + curr);
-        System.out.println("Date: " + formatForDates.format(c.date));
-        System.out.println(c.message);
-        System.out.println();
-    }
-
-    public static void globalLog() {
-        List<String> commitsList = plainFilenamesIn(COMMITS_FOLDER);
-        for (String c : commitsList) {
-            logMessage(c);
-        }
     }
 }
