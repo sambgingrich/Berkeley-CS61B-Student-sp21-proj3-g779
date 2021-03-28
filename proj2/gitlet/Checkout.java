@@ -16,6 +16,5 @@ public class Checkout {
         writeContents(CWDFile, contents);
     }
 
-
-    //Space here for branchCheckout
+    //public static void checkout()
 }
