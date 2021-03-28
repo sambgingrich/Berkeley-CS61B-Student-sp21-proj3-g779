@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 
 import static gitlet.Utils.*;
-import static gitlet.Utils.exitWithError;
 import static gitlet.Repository.*;
 
 public class AddRemove {
@@ -12,7 +11,7 @@ public class AddRemove {
         //Check if the file exists
         File newFile = join(CWD, fileName);
         if (!newFile.exists()) {
-            exitWithError("File does not exist.");
+            error("File does not exist.", null);
         }
         //Load addMap
         addMap = readObject(ADD_FILE, HashMap.class);
@@ -52,7 +51,7 @@ public class AddRemove {
             removeMap.put(filename, null);
             removeFile.delete();
         } else {
-            exitWithError("No reason to remove the file.");
+            error("No reason to remove the file.", null);
         }
     }
 }

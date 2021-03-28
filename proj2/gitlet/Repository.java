@@ -80,7 +80,7 @@ public class Repository {
         removeMap = readObject(REMOVE_FILE, HashMap.class);
         //Catch failure cases here
         if (addMap.isEmpty() && removeMap.isEmpty()) {
-            exitWithError("No changes added to the commit.");
+           error("No changes added to the commit.", null);
         }
         //Load date and UID of current (now parent) commit
         Date today = new Date();
