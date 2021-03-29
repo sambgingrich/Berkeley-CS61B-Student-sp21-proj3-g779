@@ -42,7 +42,7 @@ public class Status {
     }
 
     private static void stagedFiles() {
-        if (addMap.isEmpty()) {
+        if (addMap == null) {
             return;
         }
         for (Map.Entry<String, String> entry : addMap.entrySet()) {
@@ -51,7 +51,7 @@ public class Status {
     }
 
     private static void rmFiles() {
-        if (removeMap.isEmpty()) {
+        if (removeMap == null) {
             return;
         }
         for (Map.Entry<String, String> entry : removeMap.entrySet()) {

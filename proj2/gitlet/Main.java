@@ -99,6 +99,9 @@ public class Main {
             case "log":
                 log();
                 break;
+            case "reset":
+                reset(args[1]);
+                break;
         }
     }
 
