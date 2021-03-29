@@ -81,7 +81,7 @@ public class Main {
                     //Handle case of checkout commit id -- filename
                     checkout(commitX, args[3]);
                 } else {
-                   //checkout(args[1]);
+                   checkout(args[1]);
                 }
                 break;
             case "branch":

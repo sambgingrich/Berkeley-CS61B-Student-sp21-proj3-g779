@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.util.HashMap;
 
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
@@ -29,8 +30,8 @@ public class Checkout {
         String branchHeadUID = readContentsAsString(branchFile);
         //check branch is the current branch
         if (branchHeadUID.equals(headUID)) {
-            error("No need to checkout the current branch");
-        }
+                error("No need to checkout the current branch");
+            }
         //check for  untracked files
         for (String fileName : plainFilenamesIn(CWD)) {
             if (!head.map.entrySet().contains(fileName)) {
@@ -38,18 +39,23 @@ public class Checkout {
             }
         }
         Commit branchHead = Commit.loadCommit(branchHeadUID);
-        //Delete all files in CWD that weren't in in branchHead,
-        // or maybe just clear the CWD?
+        //Delete all files in CWD that weren't in in branchHead
         for (String fileName : plainFilenamesIn(CWD)) {
             if (!branchHead.map.entrySet().contains(fileName)) {
                 File fileToDelete = join(CWD, fileName);
                 fileToDelete.delete();
+            } else { //Move all the files from branchHead to CWD, overwriting existing files
+                String blobUID = branchHead.map.get(fileName);
+                File blobFile = join(BLOB_FOLDER, blobUID);
+                byte[] contents = readContents(blobFile);
+                File CWDFile = join(CWD, fileName);
+                writeContents(CWDFile, contents);
             }
         }
-        //Move all the files from branchHead to CWD, overwriting existing files
-
         //Make branchHead the HEAD
-
+        writeContents(HEAD_FILE, branchHeadUID);
         //Clear the staging area
+        writeObject(ADD_FILE, new HashMap<String, String>(3));
+        writeObject(REMOVE_FILE, new HashMap<String, String>(3));
     }
 }

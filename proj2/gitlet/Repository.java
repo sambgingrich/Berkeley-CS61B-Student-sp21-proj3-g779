@@ -59,7 +59,7 @@ public class Repository {
 
         //Make initial commit.
         Date epoch = new Date(0); //This is the right date, use date format when outputting logs.
-        Commit initial = new Commit("initial commit", null, epoch);
+        new Commit("initial commit", null, epoch);
         addMap = new HashMap<> (3);
         removeMap = new HashMap<> (3);
 
