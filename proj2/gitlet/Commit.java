@@ -42,7 +42,9 @@ public class Commit implements Serializable {
         this.parent = parent;
         this.date = date;
         if (parent != null) { //In the case of the initial commit
-            //Load parent node
+            //Load parent node and add and remove maps
+            addMap = readObject(ADD_FILE, HashMap.class);
+            removeMap = readObject(REMOVE_FILE, HashMap.class);
             Commit p = loadCommit(parent);
             //Set branch to parent's branch
             this.BRANCH_FILE = p.BRANCH_FILE;

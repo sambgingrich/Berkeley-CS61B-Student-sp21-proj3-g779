@@ -1,6 +1,9 @@
 package gitlet;
 
+import net.sf.saxon.expr.Component;
+
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,18 +45,14 @@ public class Status {
     }
 
     private static void stagedFiles() {
-        if (addMap == null) {
-            return;
-        }
+        addMap = readObject(ADD_FILE, HashMap.class);
         for (Map.Entry<String, String> entry : addMap.entrySet()) {
             System.out.println(entry.getKey());
         }
     }
 
     private static void rmFiles() {
-        if (removeMap == null) {
-            return;
-        }
+        removeMap = readObject(REMOVE_FILE, HashMap.class);
         for (Map.Entry<String, String> entry : removeMap.entrySet()) {
             System.out.println(entry.getKey());
         }
