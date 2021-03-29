@@ -97,11 +97,25 @@ public class Commit implements Serializable {
 
     //Returns a Commit from disk with the given UID.
     public static Commit loadCommit(String UID) {
-        File loadFile = join(COMMITS_FOLDER, UID);
-        /*Check if the file exists
+        String UIDtoLoad = UID;
+        //Check for case where the 6 digit abbreviation is used
+        if (UID.length() == 6) {
+            boolean found = false;
+            for (String commitUID : plainFilenamesIn(COMMITS_FOLDER)) {
+                if (commitUID.contains(UID)) {
+                    found = true;
+                    UIDtoLoad = commitUID;
+                    break;
+                }
+            } if (!found) {
+                error("No commit with that id exists.", null);
+            }
+        }
+        File loadFile = join(COMMITS_FOLDER, UIDtoLoad);
+        /*Check if the file exists*/
         if (!loadFile.exists()) {
-            exitWithError("No commit with that id exists.");
-        }*/
+            error("No commit with that id exists.", null);
+        }
         Commit c = readObject(loadFile, Commit.class);
         return c;
     }

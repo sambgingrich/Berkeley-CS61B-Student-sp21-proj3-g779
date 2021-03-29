@@ -6,7 +6,7 @@ import static gitlet.Repository.*;
 import static gitlet.Utils.*;
 import static gitlet.Log.*;
 import static gitlet.AddRemove.*;
-import static gitlet.Checkout.*;
+import static gitlet.CheckoutReset.*;
 import static gitlet.Status.*;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
