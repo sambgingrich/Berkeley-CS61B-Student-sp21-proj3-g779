@@ -9,7 +9,7 @@ import static gitlet.Utils.*;
 import static gitlet.Repository.*;
 
 public class Status {
-    private static List<String> untrackedFiles;
+    //private static List<String> untrackedFiles;
 
     public static void status() {
         System.out.println("=== Branches ===");
@@ -22,10 +22,10 @@ public class Status {
         rmFiles();
         System.out.println();
         System.out.println("=== Modifications Not Staged For Commit ===");
-        modsNotStaged();
+        //modsNotStaged();
         System.out.println();
         System.out.println("=== Untracked Files ===");
-        untracked();
+        //untracked();
         System.out.println();
     }
 
@@ -56,7 +56,7 @@ public class Status {
         }
     }
 
-    //Extra Credit (32 Points) --------------------------------------------------
+    /* Extra Credit (32 Points) --------------------------------------------------
     private static void modsNotStaged() {
         String headUID = readContentsAsString(HEAD_FILE);
         Commit head = Commit.loadCommit(headUID);
@@ -91,5 +91,5 @@ public class Status {
                 System.out.println(untrackedFileName);
             }
         }
-    }
+    }*/
 }
