@@ -13,15 +13,15 @@ public class CheckoutReset {
         String blobUID = c.map.get(fileName);
         File blobFile = join(BLOB_FOLDER, blobUID);
         byte[] contents = readContents(blobFile);
-        File CWDFile = join(CWD, fileName);
-        writeContents(CWDFile, contents);
+        File cWDFile = join(CWD, fileName);
+        writeContents(cWDFile, contents);
     }
 
     /* Cover the branch checkout case */
     public static void checkout(String branchName) {
         //check branch exists
         if (!plainFilenamesIn(BRANCHES_DIR).contains(branchName)) {
-            error("No such branch exists.", null);
+            System.out.println("No such branch exists.");
         }
         //Load HEAD commit and branch's head
         String headUID = readContentsAsString(HEAD_FILE);
@@ -30,13 +30,8 @@ public class CheckoutReset {
         String branchHeadUID = readContentsAsString(branchFile);
         //check branch is the current branch
         if (branchHeadUID.equals(headUID)) {
-                error("No need to checkout the current branch");
-            }
-        //check for  untracked files
-        for (String fileName : plainFilenamesIn(CWD)) {
-            if (!head.map.entrySet().contains(fileName)) {
-                error("There is an untracked file in the way; delete it, or add and commit it first.", null);
-            }
+            System.out.println("No need to checkout the current branch");
+            System.exit(0);
         }
         moveTrackedFiles(branchHeadUID, false);
     }
@@ -51,7 +46,9 @@ public class CheckoutReset {
         Commit head = Commit.loadCommit(headUID);
         for (String fileName : plainFilenamesIn(CWD)) {
             if (!head.map.entrySet().contains(fileName)) {
-                error("There is an untracked file in the way; delete it, or add and commit it first.", null);
+                System.out.println("There is an untracked file in the way; delete it, "
+                        + "or add and commit it first.");
+                System.exit(0);
             }
         }
         Commit c = Commit.loadCommit(commitID);
@@ -61,11 +58,11 @@ public class CheckoutReset {
                 File fileToDelete = join(CWD, fileName);
                 fileToDelete.delete();
             } else { //Move all the files from branchHead to CWD, overwriting existing files
-                String blobUID =c.map.get(fileName);
+                String blobUID = c.map.get(fileName);
                 File blobFile = join(BLOB_FOLDER, blobUID);
                 byte[] contents = readContents(blobFile);
-                File CWDFile = join(CWD, fileName);
-                writeContents(CWDFile, contents);
+                File cWDFile = join(CWD, fileName);
+                writeContents(cWDFile, contents);
             }
         }
         //If reset, move the current branch pointer to the previous commit

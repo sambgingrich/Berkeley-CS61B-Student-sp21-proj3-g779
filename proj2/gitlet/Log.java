@@ -13,7 +13,7 @@ public class Log {
         loghelp(headUID);
     }
 
-    private static void loghelp (String curr) {
+    private static void loghelp(String curr) {
         Commit c = Commit.loadCommit(curr);
         logMessage(curr);
         if (c.parent == null) {
@@ -23,7 +23,7 @@ public class Log {
         }
     }
 
-    private static void logMessage (String curr) {
+    private static void logMessage(String curr) {
         Commit c = Commit.loadCommit(curr);
         System.out.println("===");
         System.out.println("commit " + curr);
@@ -41,15 +41,15 @@ public class Log {
 
     public static void find(String message) {
         List<String> commitsList = plainFilenamesIn(COMMITS_FOLDER);
-        boolean cexitsts = false;
+        boolean cExists = false;
         for (String c : commitsList) {
             Commit charlie = Commit.loadCommit(c);
             if (charlie.message.equals(message)) {
                 System.out.println(c);
-                cexitsts = true;
+                cExists = true;
             }
         }
-        if (!cexitsts) {
+        if (!cExists) {
             System.out.println("Found no commit with that message.");
         }
     }

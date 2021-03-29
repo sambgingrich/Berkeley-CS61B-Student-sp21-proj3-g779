@@ -1,7 +1,5 @@
 package gitlet;
 
-import net.sf.saxon.expr.Component;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -72,19 +70,15 @@ public class Status {
             }
         }
         //Check for modified files
+        addMap = readObject(ADD_FILE, HashMap.class);
         for (String fileName : plainFilenamesIn(CWD)) {
-            if (!head.map.entrySet().contains(fileName)) {
+            if (!head.map.entrySet().contains(fileName) && !addMap.entrySet().contains(fileName)) {
                 untrackedFiles.add(fileName);
             } else {
                 File wdFile = join(CWD, fileName);
                 String wdFileUID = sha1(wdFile);
-                boolean unmodified = false;
-                for (Map.Entry<String, String> entry : head.map.entrySet()) {
-                    if (wdFileUID.equals(entry.getValue())) {
-                        unmodified = true;
-                    }
-                }
-                if (!unmodified) {
+                if (!wdFileUID.equals(head.map.get(fileName))
+                        && !wdFileUID.equals(addMap.get(fileName))) {
                     System.out.println(fileName + " (modified)");
                 }
             }

@@ -20,7 +20,7 @@ import static gitlet.Utils.*;
  * 2. Change Metadata according to user
  * 3. Track files to blobs based on the staging area
  * 4. Denote the parent of current commit as the HEAD
- * 5. Advance HEAD to point to new HEAD, master.
+ * 5. Advance HEAD to point to new HEAD, MASTER.
  * 6. Clear staging area
  *
  * A commit is a map of file names to blobs. File names
@@ -71,11 +71,11 @@ public class Commit implements Serializable {
             //Clear the add and remove maps
             addMap.clear();
             removeMap.clear();
-            //Write the commit to disk, persist HEAD and master pointers
+            //Write the commit to disk, persist HEAD and MASTER pointers
         }
         //In the case of the initial commit.
         if (parent == null) {
-            this.BRANCH_FILE = master;
+            this.BRANCH_FILE = MASTER;
             this.map = new HashMap<>(5);
         }
         saveCommit(this);
@@ -84,8 +84,8 @@ public class Commit implements Serializable {
     public void saveCommit(Commit c) {
         //setup persistence for commits.
         byte[] cAsByte = serialize(c);
-        String UID = Utils.sha1(cAsByte);
-        File newCommit = join(COMMITS_FOLDER, UID);
+        String uID = Utils.sha1(cAsByte);
+        File newCommit = join(COMMITS_FOLDER, uID);
         try {
             newCommit.createNewFile();
         } catch (IOException exception) {
@@ -93,30 +93,32 @@ public class Commit implements Serializable {
         }
         writeObject(newCommit, c);
         //Write the SHA1 hash of c into the HEAD and branch files once they are cleared.
-        writeContents(HEAD_FILE, UID);
-        writeContents(BRANCH_FILE, UID);
+        writeContents(HEAD_FILE, uID);
+        writeContents(BRANCH_FILE, uID);
     }
 
-    //Returns a Commit from disk with the given UID.
-    public static Commit loadCommit(String UID) {
-        String UIDtoLoad = UID;
+    //Returns a Commit from disk with the given uID.
+    public static Commit loadCommit(String uID) {
+        String uIDToLoad = uID;
         //Check for case where the 6 digit abbreviation is used
-        if (UID.length() == 6) {
+        if (uID.length() == 6) {
             boolean found = false;
-            for (String commitUID : plainFilenamesIn(COMMITS_FOLDER)) {
-                if (commitUID.contains(UID)) {
+            for (String commituID : plainFilenamesIn(COMMITS_FOLDER)) {
+                if (commituID.contains(uID)) {
                     found = true;
-                    UIDtoLoad = commitUID;
+                    uIDToLoad = commituID;
                     break;
                 }
-            } if (!found) {
-                error("No commit with that id exists.", null);
+            }
+            if (!found) {
+                System.out.println("No commit with that id exists.");
             }
         }
-        File loadFile = join(COMMITS_FOLDER, UIDtoLoad);
+        File loadFile = join(COMMITS_FOLDER, uIDToLoad);
         /*Check if the file exists*/
         if (!loadFile.exists()) {
-            error("No commit with that id exists.", null);
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
         }
         Commit c = readObject(loadFile, Commit.class);
         return c;
