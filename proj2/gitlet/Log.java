@@ -1,10 +1,10 @@
 package gitlet;
 
+import java.io.File;
 import java.util.List;
 
 import static gitlet.Repository.*;
-import static gitlet.Utils.plainFilenamesIn;
-import static gitlet.Utils.readContentsAsString;
+import static gitlet.Utils.*;
 
 
 public class Log {
@@ -14,7 +14,8 @@ public class Log {
     }
 
     private static void loghelp(String curr) {
-        Commit c = Commit.loadCommit(curr);
+        File loadFile = join(COMMITS_FOLDER, curr);
+        Commit c = readObject(loadFile, Commit.class);
         logMessage(curr);
         if (c.parent == null) {
             return;
@@ -24,7 +25,8 @@ public class Log {
     }
 
     private static void logMessage(String curr) {
-        Commit c = Commit.loadCommit(curr);
+        File loadFile = join(COMMITS_FOLDER, curr);
+        Commit c = readObject(loadFile, Commit.class);
         System.out.println("===");
         System.out.println("commit " + curr);
         System.out.println("Date: " + formatForDates.format(c.date));

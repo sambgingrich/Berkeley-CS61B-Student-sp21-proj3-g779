@@ -10,10 +10,16 @@ public class CheckoutReset {
     /* For cases 1: Checkout a given file from the head
      * and 2: Checkout a given filename from a given commit ID */
     public static void checkout(Commit c, String fileName) {
+        /*check failure case*/
+        if (!c.map.containsKey(fileName)) {
+            System.out.println("File does not exist in that commit.");
+            System.exit(0);
+        }
+        File cWDFile = join(CWD, fileName);
+        cWDFile.delete();
         String blobUID = c.map.get(fileName);
         File blobFile = join(BLOB_FOLDER, blobUID);
         byte[] contents = readContents(blobFile);
-        File cWDFile = join(CWD, fileName);
         writeContents(cWDFile, contents);
     }
 
@@ -25,7 +31,6 @@ public class CheckoutReset {
         }
         //Load HEAD commit and branch's head
         String headUID = readContentsAsString(HEAD_FILE);
-        Commit head = Commit.loadCommit(headUID);
         File branchFile = join(BRANCHES_DIR, branchName);
         String branchHeadUID = readContentsAsString(branchFile);
         //check branch is the current branch
@@ -44,24 +49,29 @@ public class CheckoutReset {
         //check for  untracked files
         String headUID = readContentsAsString(HEAD_FILE);
         Commit head = Commit.loadCommit(headUID);
+        Commit c = Commit.loadCommit(commitID);
+        removeMap = readObject(REMOVE_FILE, HashMap.class);
+        addMap = readObject(ADD_FILE, HashMap.class);
         for (String fileName : plainFilenamesIn(CWD)) {
-            if (!head.map.entrySet().contains(fileName)) {
+            //Checks if working file is both untracked and would be overwritten by the reset.
+            if (!head.map.entrySet().contains(fileName)
+                    && !addMap.containsKey(fileName)
+                    && !removeMap.containsKey(fileName)
+                    && c.map.containsKey(fileName)) {
                 System.out.println("There is an untracked file in the way; delete it, "
                         + "or add and commit it first.");
                 System.exit(0);
             }
         }
-        Commit c = Commit.loadCommit(commitID);
         //Delete all files in CWD that weren't in in branchHead
         for (String fileName : plainFilenamesIn(CWD)) {
-            if (!c.map.entrySet().contains(fileName)) {
-                File fileToDelete = join(CWD, fileName);
-                fileToDelete.delete();
-            } else { //Move all the files from branchHead to CWD, overwriting existing files
+            File cWDFile = join(CWD, fileName);
+            cWDFile.delete();
+            if (c.map.entrySet().contains(fileName)) {
+                //Move all the files from branchHead to CWD, overwriting existing files
                 String blobUID = c.map.get(fileName);
                 File blobFile = join(BLOB_FOLDER, blobUID);
                 byte[] contents = readContents(blobFile);
-                File cWDFile = join(CWD, fileName);
                 writeContents(cWDFile, contents);
             }
         }

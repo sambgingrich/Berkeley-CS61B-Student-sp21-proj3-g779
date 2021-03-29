@@ -16,17 +16,21 @@ public class AddRemove {
         }
         //Load addMap
         addMap = readObject(ADD_FILE, HashMap.class);
+        removeMap = readObject(REMOVE_FILE, HashMap.class);
         //Check if an identical SHA1-hash is in the current Commit
         byte[] contents = readContents(newFile);
         String uID = Utils.sha1(contents);
         Commit c = currentCommit();
-        if (c.map != null && c.map.containsKey(fileName)
-                && c.map.get(fileName).equals(uID)) {
-            if (addMap.containsKey(fileName) && c.map.get(fileName).equals(uID)) {
-                addMap.remove(fileName);
+        //If an older version is there, overwrite it
+        if (addMap.containsKey(fileName)) {
+            addMap.remove(fileName);
+            if (c.map != null && c.map.containsKey(fileName)
+                    && c.map.get(fileName).equals(uID)) {
+                return;
             }
-            writeObject(ADD_FILE, addMap);
-            return;
+        }
+        if (removeMap.containsKey(fileName)) {
+            removeMap.remove(fileName);
         }
         //If it's not there, add it to the addMap
         addMap.put(fileName, uID);
@@ -44,12 +48,12 @@ public class AddRemove {
         addMap = readObject(ADD_FILE, HashMap.class);
         Commit c = currentCommit();
         File removeFile = join(CWD, filename);
+        removeMap = readObject(REMOVE_FILE, HashMap.class);
         if (addMap.containsKey(filename)) {
+            removeMap.put(filename, addMap.get(filename));
             addMap.remove(filename);
-            removeFile.delete();
         } else if (c.map.containsKey(filename)) {
-            removeMap = readObject(REMOVE_FILE, HashMap.class);
-            removeMap.put(filename, null);
+            removeMap.put(filename, c.map.get(filename));
             removeFile.delete();
         } else {
             System.out.println("No reason to remove the file.");

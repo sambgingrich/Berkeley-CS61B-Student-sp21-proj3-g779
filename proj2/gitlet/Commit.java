@@ -49,8 +49,9 @@ public class Commit implements Serializable {
             //Set branch to parent's branch
             this.BRANCH_FILE = p.BRANCH_FILE;
             //In the case that there is nothing staged to be added or removed.
-            if (Repository.addMap.isEmpty() & Repository.removeMap.isEmpty()) {
-                this.map = p.map;
+            if (addMap.isEmpty() && removeMap.isEmpty()) {
+                System.out.println("No changes added to the commit.");
+                System.exit(0);
             }
             //Handle adding new mappings from Repository.addMap here.
             //Source: Learned how to iterate through hashmap from geeksforgeeks.org
@@ -68,10 +69,6 @@ public class Commit implements Serializable {
                 p.map.remove(key);
             }
             this.map = p.map;
-            //Clear the add and remove maps
-            addMap.clear();
-            removeMap.clear();
-            //Write the commit to disk, persist HEAD and MASTER pointers
         }
         //In the case of the initial commit.
         if (parent == null) {
@@ -95,6 +92,9 @@ public class Commit implements Serializable {
         //Write the SHA1 hash of c into the HEAD and branch files once they are cleared.
         writeContents(HEAD_FILE, uID);
         writeContents(BRANCH_FILE, uID);
+        //Clear the add and remove maps
+        writeObject(ADD_FILE, new HashMap<String, String>(3));
+        writeObject(REMOVE_FILE, new HashMap<String, String>(3));
     }
 
     //Returns a Commit from disk with the given uID.

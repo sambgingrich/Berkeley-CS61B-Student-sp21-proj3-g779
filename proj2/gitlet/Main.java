@@ -66,23 +66,12 @@ public class Main {
                 break;
             case "checkout":
                 if (args.length == 3) {
-                    String headUID = readContentsAsString(HEAD_FILE);
-                    Commit head = Commit.loadCommit(headUID);
-                    /*check failure case*/
-                    if (!head.map.containsKey(args[2])) {
-                        System.out.println("File does not exist in that commit.");
-                        System.exit(0);
-                    }
+                    Commit head = currentCommit();
                     //Handle case of checkout --filename
                     checkout(head, args[2]);
                 } else if (args.length == 4) {
                     //handles the case that the ID doesn't exist.
                     Commit commitX = Commit.loadCommit(args[1]);
-                    /*Check failure cases*/
-                    if (!commitX.map.containsKey(args[3])) {
-                        System.out.println("File does not exist in that commit.");
-                        System.exit(0);
-                    }
                     //Handle case of checkout commit id -- filename
                     checkout(commitX, args[3]);
                 } else {
