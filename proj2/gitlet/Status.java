@@ -93,7 +93,7 @@ public class Status {
     }
 
     private static void untracked() {
-        if (!untrackedFiles.isEmpty()) {
+        if (!(untrackedFiles == null)) {
             for (String untrackedFileName : untrackedFiles) {
                 System.out.println(untrackedFileName);
             }
