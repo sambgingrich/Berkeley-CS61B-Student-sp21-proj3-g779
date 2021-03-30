@@ -77,10 +77,8 @@ public class Main {
                     Commit commitX = Commit.loadCommit(args[1]);
                     //Handle case of checkout commit id -- filename
                     checkout(commitX, args[3]);
-                } if (args.length == 2) {
-                   checkout(args[1]);
                 } else {
-                    System.out.println("Incorrect operands");
+                    checkout(args[1]);
                 }
                 break;
             case "branch":
