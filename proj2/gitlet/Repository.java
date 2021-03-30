@@ -38,6 +38,7 @@ public class Repository {
     public static final File HEAD_FILE = join(GITLET_DIR, "head");
     public static final File BRANCHES_DIR = join(GITLET_DIR, "branches");
     public static final File MASTER = join(BRANCHES_DIR, "master");
+    public static final File CURRENT_BRANCH = join(GITLET_DIR, "currBranch");
 
     private static void setupPersistence() {
         /*Check if there's a version control system already in the CWD.*/
@@ -57,13 +58,12 @@ public class Repository {
     public static void init() {
         //Set up file structure so that gitlet persists.
         setupPersistence();
-
+        writeContents(CURRENT_BRANCH, "master");
         //Make initial commit.
         Date epoch = new Date(0); //This is the right date, use date format when outputting logs.
         new Commit("initial commit", null, epoch);
         addMap = new HashMap<>(3);
         removeMap = new HashMap<>(3);
-
         writeObject(ADD_FILE, addMap);
         writeObject(REMOVE_FILE, removeMap);
     }

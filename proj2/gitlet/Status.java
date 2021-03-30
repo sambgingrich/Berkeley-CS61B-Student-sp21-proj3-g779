@@ -1,6 +1,5 @@
 package gitlet;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +30,9 @@ public class Status {
 
     private static void branches() {
         List<String> branchList = plainFilenamesIn(BRANCHES_DIR);
-        String headUID = readContentsAsString(HEAD_FILE);
+        String currBranch = readContentsAsString(CURRENT_BRANCH);
         for (String branch : branchList) {
-            File branchFile = join(BRANCHES_DIR, branch);
-            if (readContentsAsString(branchFile).equals(headUID)) {
+            if (branch.equals(currBranch)) {
                 System.out.println("*" + branch);
             } else {
                 System.out.println(branch);

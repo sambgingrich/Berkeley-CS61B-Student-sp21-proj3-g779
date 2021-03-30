@@ -2,7 +2,6 @@ package gitlet;
 
 import java.io.File;
 import java.util.HashMap;
-
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
 
@@ -21,14 +20,16 @@ public class AddRemove {
         byte[] contents = readContents(newFile);
         String uID = Utils.sha1(contents);
         Commit c = currentCommit();
+        //If it's tracked in current commit and hasn't changed, do nothing.
+        if (c.map != null && c.map.containsKey(fileName)
+                && c.map.get(fileName).equals(uID)) {
+            return;
+        }
         //If an older version is there, overwrite it
         if (addMap.containsKey(fileName)) {
             addMap.remove(fileName);
-            if (c.map != null && c.map.containsKey(fileName)
-                    && c.map.get(fileName).equals(uID)) {
-                return;
-            }
         }
+        //Unstage for removal
         if (removeMap.containsKey(fileName)) {
             removeMap.remove(fileName);
         }

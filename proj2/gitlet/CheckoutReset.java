@@ -2,7 +2,6 @@ package gitlet;
 
 import java.io.File;
 import java.util.HashMap;
-
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
 
@@ -30,15 +29,15 @@ public class CheckoutReset {
             System.out.println("No such branch exists.");
         }
         //Load HEAD commit and branch's head
-        Commit curr = currentCommit();
         File branchFile = join(BRANCHES_DIR, branchName);
         String branchHeadUID = readContentsAsString(branchFile);
         //check branch is the current branch
-        if (branchFile.equals(curr.BRANCH_FILE)) {
+        if (branchName.equals(readContentsAsString(CURRENT_BRANCH))) {
             System.out.println("No need to checkout the current branch");
             System.exit(0);
         }
         moveTrackedFiles(branchHeadUID, false);
+        writeContents(CURRENT_BRANCH, branchName);
     }
 
     public static void reset(String commitID) {
@@ -85,8 +84,6 @@ public class CheckoutReset {
         }
         //Make branchHead the HEAD
         writeContents(HEAD_FILE, commitID);
-        //Make HEAD commit branch file the given branch file
-        head.BRANCH_FILE = c.BRANCH_FILE;
         //Clear the staging area
         writeObject(ADD_FILE, new HashMap<String, String>(3));
         writeObject(REMOVE_FILE, new HashMap<String, String>(3));
