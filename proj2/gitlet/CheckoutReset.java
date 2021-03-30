@@ -48,9 +48,9 @@ public class CheckoutReset {
         //check for  untracked files
         Commit head = currentCommit();
         Commit c = Commit.loadCommit(commitID);
-        removeMap = readObject(REMOVE_FILE, HashMap.class);
-        addMap = readObject(ADD_FILE, HashMap.class);
-        /* //Checks if working file is both untracked and would be overwritten by the reset.
+         /*HashMap<String, String>removeMap = readObject(REMOVE_FILE, HashMap.class);
+        HashMap<String, String>addMap = readObject(ADD_FILE, HashMap.class);
+        //Checks if working file is both untracked and would be overwritten by the reset.
         for (String fileName : plainFilenamesIn(CWD)) {
             if (!head.map.entrySet().contains(fileName)
                     && !addMap.containsKey(fileName)

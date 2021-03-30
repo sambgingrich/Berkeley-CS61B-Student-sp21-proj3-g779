@@ -41,14 +41,14 @@ public class Status {
     }
 
     private static void stagedFiles() {
-        addMap = readObject(ADD_FILE, HashMap.class);
+        HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
         for (Map.Entry<String, String> entry : addMap.entrySet()) {
             System.out.println(entry.getKey());
         }
     }
 
     private static void rmFiles() {
-        removeMap = readObject(REMOVE_FILE, HashMap.class);
+        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
         for (Map.Entry<String, String> entry : removeMap.entrySet()) {
             System.out.println(entry.getKey());
         }

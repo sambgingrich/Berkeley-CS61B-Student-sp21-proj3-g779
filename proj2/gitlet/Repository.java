@@ -21,8 +21,6 @@ public class Repository {
      * comment above them describing what that variable represents and how that
      * variable is used. We've provided two examples for you.
      */
-    static HashMap<String, String> addMap;
-    static HashMap<String, String> removeMap;
     //How to format the date from Stack Overflow.
     static SimpleDateFormat formatForDates = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
 
@@ -62,8 +60,8 @@ public class Repository {
         //Make initial commit.
         Date epoch = new Date(0); //This is the right date, use date format when outputting logs.
         new Commit("initial commit", null, epoch);
-        addMap = new HashMap<>(3);
-        removeMap = new HashMap<>(3);
+        HashMap<String, String> addMap = new HashMap<>(3);
+        HashMap<String, String> removeMap = new HashMap<>(3);
         writeObject(ADD_FILE, addMap);
         writeObject(REMOVE_FILE, removeMap);
     }

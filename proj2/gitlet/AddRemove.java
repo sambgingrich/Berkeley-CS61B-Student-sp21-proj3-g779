@@ -14,8 +14,8 @@ public class AddRemove {
             System.exit(0);
         }
         //Load addMap
-        addMap = readObject(ADD_FILE, HashMap.class);
-        removeMap = readObject(REMOVE_FILE, HashMap.class);
+        HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
+        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
         //Check if an identical SHA1-hash is in the current Commit
         byte[] contents = readContents(newFile);
         String uID = Utils.sha1(contents);
@@ -47,10 +47,10 @@ public class AddRemove {
     public static void rm(String filename) {
         /*Check failure case where the file is not in addMap
         or map or current commit */
-        addMap = readObject(ADD_FILE, HashMap.class);
+        HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
         Commit c = currentCommit();
         File removeFile = join(CWD, filename);
-        removeMap = readObject(REMOVE_FILE, HashMap.class);
+        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
         if (addMap.containsKey(filename)) {
             removeMap.put(filename, addMap.get(filename));
             addMap.remove(filename);
