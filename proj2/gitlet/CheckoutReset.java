@@ -30,11 +30,11 @@ public class CheckoutReset {
             System.out.println("No such branch exists.");
         }
         //Load HEAD commit and branch's head
-        String headUID = readContentsAsString(HEAD_FILE);
+        Commit curr = currentCommit();
         File branchFile = join(BRANCHES_DIR, branchName);
         String branchHeadUID = readContentsAsString(branchFile);
         //check branch is the current branch
-        if (branchHeadUID.equals(headUID)) {
+        if (branchFile.equals(curr.BRANCH_FILE)) {
             System.out.println("No need to checkout the current branch");
             System.exit(0);
         }
