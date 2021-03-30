@@ -101,10 +101,10 @@ public class Commit implements Serializable {
     public static Commit loadCommit(String uID) {
         String uIDToLoad = uID;
         //Check for case where the 6 digit abbreviation is used
-        if (uID.length() == 6) {
+        if (uID.length() < 40) {
             boolean found = false;
             for (String commituID : plainFilenamesIn(COMMITS_FOLDER)) {
-                if (commituID.contains(uID)) {
+                if (commituID.startsWith(uID)) {
                     found = true;
                     uIDToLoad = commituID;
                     break;
