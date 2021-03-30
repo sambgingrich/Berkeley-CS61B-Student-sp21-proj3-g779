@@ -23,6 +23,7 @@ public class Main {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Must have at least one argument.");
+            System.exit(0);
         }
         String firstArg = args[0];
         switch (firstArg) {
@@ -60,6 +61,8 @@ public class Main {
                 if (args.length == 1 || args[1].isEmpty()) {
                     System.out.println("Please enter a commit message.");
                     System.exit(0);
+                } if (args.length > 2) {
+                    System.out.println("Incorrect operands");
                 } else {
                     commit(args[1]);
                 }
@@ -74,8 +77,10 @@ public class Main {
                     Commit commitX = Commit.loadCommit(args[1]);
                     //Handle case of checkout commit id -- filename
                     checkout(commitX, args[3]);
-                } else {
+                } if (args.length == 2) {
                    checkout(args[1]);
+                } else {
+                    System.out.println("Incorrect operands");
                 }
                 break;
             case "branch":
@@ -97,6 +102,9 @@ public class Main {
             case "reset":
                 reset(args[1]);
                 break;
+            default:
+                System.out.println("No command with that name exists.");
+                System.exit(0);
         }
     }
 
