@@ -76,13 +76,6 @@ public class Repository {
     }
 
     public static void commit(String message) {
-        //Load addMap
-        addMap = readObject(ADD_FILE, HashMap.class);
-        removeMap = readObject(REMOVE_FILE, HashMap.class);
-        //Catch failure cases here
-        if (addMap.isEmpty() && removeMap.isEmpty()) {
-            error("No changes added to the commit.", null);
-        }
         //Load date and UID of current (now parent) commit
         Date today = new Date();
         String currentCommitID = readContentsAsString(HEAD_FILE);

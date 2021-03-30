@@ -85,6 +85,8 @@ public class CheckoutReset {
         }
         //Make branchHead the HEAD
         writeContents(HEAD_FILE, commitID);
+        //Make HEAD commit branch file the given branch file
+        head.BRANCH_FILE = c.BRANCH_FILE;
         //Clear the staging area
         writeObject(ADD_FILE, new HashMap<String, String>(3));
         writeObject(REMOVE_FILE, new HashMap<String, String>(3));
