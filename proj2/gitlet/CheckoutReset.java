@@ -52,7 +52,7 @@ public class CheckoutReset {
         Commit c = Commit.loadCommit(commitID);
         removeMap = readObject(REMOVE_FILE, HashMap.class);
         addMap = readObject(ADD_FILE, HashMap.class);
-        for (String fileName : plainFilenamesIn(CWD)) {
+        /*for (String fileName : plainFilenamesIn(CWD)) {
             //Checks if working file is both untracked and would be overwritten by the reset.
             if (!head.map.entrySet().contains(fileName)
                     && !addMap.containsKey(fileName)
@@ -62,7 +62,7 @@ public class CheckoutReset {
                         + "or add and commit it first.");
                 System.exit(0);
             }
-        }
+        }*/
         //Delete all files in CWD that weren't in in branchHead
         for (String fileName : plainFilenamesIn(CWD)) {
             File cWDFile = join(CWD, fileName);
