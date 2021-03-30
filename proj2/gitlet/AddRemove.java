@@ -35,6 +35,7 @@ public class AddRemove {
         //If it's not there, add it to the addMap
         addMap.put(fileName, uID);
         writeObject(ADD_FILE, addMap);
+        writeObject(REMOVE_FILE, removeMap);
         /* Save a snapshot of the file to the BLOBS_FOLDER
          * with the SHA1 hash as the name of the file.
          */
@@ -57,6 +58,9 @@ public class AddRemove {
             removeFile.delete();
         } else {
             System.out.println("No reason to remove the file.");
+            System.exit(0);
         }
+        writeObject(ADD_FILE, addMap);
+        writeObject(REMOVE_FILE, removeMap);
     }
 }
