@@ -84,9 +84,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     public void addLast(T item) {
         if (end == items.length) {
             resize(false, true);
-        } /*else if (start == end && items[start] != null) {
-            end += 1;
-        } */
+        }
         items[end] = item;
         end += 1;
     }

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import static capers.CapersRepository.CAPERS_FOLDER;
 import static capers.Utils.*;
 
+
 /** Represents a dog that can be serialized.
  * @author Samuel Gingrich
 */
@@ -68,7 +69,6 @@ public class Dog implements Serializable {
             throw new IllegalArgumentException(excp.getMessage());
         }
         writeObject(newDogFile,this);
-        //writeObject(DOG_FOLDER, this);
     }
 
     @Override
