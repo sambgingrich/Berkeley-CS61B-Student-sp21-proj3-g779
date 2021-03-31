@@ -1,7 +1,5 @@
 package gitlet;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -57,7 +55,7 @@ public class Commit implements Serializable {
             saveCommit(this);
         }
     }
-    
+
     public Commit(String message, String parent, String parent2) {
         this.message = message;
         this.parent = parent;

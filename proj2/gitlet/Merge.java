@@ -1,8 +1,5 @@
 package gitlet;
 
-import net.sf.saxon.trans.SymbolicName;
-import org.checkerframework.checker.units.qual.C;
-
 import static gitlet.AddRemove.*;
 import java.io.File;
 import java.util.Set;
@@ -43,6 +40,7 @@ public class Merge {
         Commit other = Commit.loadCommit(otherBranchHead);
         Commit split = splitPoint(readContentsAsString(HEAD_FILE), otherBranch);
         Set<String> relevantFiles = relevantFiles(split, curr, other);
+        boolean conflict = false;
         for (String file : relevantFiles) {
             //In the split
             if (split.map.containsKey(file)) {
@@ -56,10 +54,16 @@ public class Merge {
                             if (split.map.get(file).equals(other.map.get(file))) {
                                 return;
                             } else { //Unmodified in curr and modified in other
-                                //Put the other version of the file in CWD
+                                File cWDFile = join(CWD, file);
+                                cWDFile.delete();
+                                String blobUID = other.map.get(file);
+                                File blobFile = join(BLOB_FOLDER, blobUID);
+                                byte[] contents = readContents(blobFile);
+                                writeContents(cWDFile, contents);
                             }
                         } else { //unmodified in curr and not present in other
-                            //Remove the file from current working directory
+                            File cWDFile = join(CWD, file);
+                            cWDFile.delete();
                         }
                     } else {//Modified in curr
                         //Modified in curr and present in other
@@ -73,10 +77,12 @@ public class Merge {
                                     return;
                                 } else { //Modified in different ways
                                     //CONFLICT!
+                                    conflict = true;
                                 }
                             }
                         } else { //Modified in curr and not present in other
                             //Conflict!
+                            conflict = true;
                         }
                     }
                 } else { // Not in curr
@@ -87,6 +93,7 @@ public class Merge {
                             return;
                         } else { //Not in curr, modified in other
                             //CONFLICT
+                            conflict = true;
                         }
                     } else { //not in curr, not in other (in split)
                         return;
@@ -102,6 +109,7 @@ public class Merge {
                             return;
                         } else {
                             //CONFLICT!
+                            conflict = true;
                         }
                     } else { //Not in split, in curr, not in other
                         return; //May need to move curr version to CWD in special case
@@ -109,7 +117,13 @@ public class Merge {
                 } else { //Not in split, not in curr
                     //Not in split, not in curr, in other
                     if(other.map.containsKey(file)) {
-                        //Move the other version to the CWD
+                        //Move other version to CWD
+                        File cWDFile = join(CWD, file);
+                        cWDFile.delete();
+                        String blobUID = other.map.get(file);
+                        File blobFile = join(BLOB_FOLDER, blobUID);
+                        byte[] contents = readContents(blobFile);
+                        writeContents(cWDFile, contents);
                     } else { //Not in split, not in curr, not in other
                         System.out.println("Considering an irrelevant file");
                         System.exit(0);
@@ -123,7 +137,9 @@ public class Merge {
         String message = "Merged " + otherBranch + " into " +curr.BRANCH_FILE;
         String currUID = readContentsAsString(HEAD_FILE);
         new Commit(message, currUID, otherBranchHead);
-
+        if (conflict) {
+            System.out.println("Encountered a merge conflict.");
+        }
     }
 
     private static void stage(Commit curr) {
@@ -149,10 +165,6 @@ public class Merge {
     }
 
     private static void conflict(String currUID, String otherUID) {
-
-    }
-
-    private static void moveToCWD(String uID) {
 
     }
 
