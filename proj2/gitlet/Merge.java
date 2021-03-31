@@ -65,15 +65,15 @@ public class Merge {
                             File cWDFile = join(CWD, file);
                             cWDFile.delete();
                         }
-                    } else {//Modified in curr
+                    } else { //Modified in curr
                         //Modified in curr and present in other
                         if (other.map.containsKey(file)) {
                             //Modified in curr and unmodified in other
                             if (other.map.get(file).equals(split.map.get(curr))) {
-                                return; //May need to move the curr version to the CWD in a special case
+                                return; //May need to move the curr version to the CWD
                             } else { //Modified in curr and modified in other
                                 //Modified in the same way
-                                if(curr.map.get(file).equals(other.map.get(file))) {
+                                if (curr.map.get(file).equals(other.map.get(file))) {
                                     return;
                                 } else { //Modified in different ways
                                     //CONFLICT!
@@ -99,11 +99,11 @@ public class Merge {
                         return;
                     }
                 }
-            } else {//Not in the split
+            } else { //Not in the split
                 //Not in split, in curr
-                if(curr.map.containsKey(file)) {
+                if (curr.map.containsKey(file)) {
                     //Not in split, in curr, in other
-                    if(other.map.containsKey(file)) {
+                    if (other.map.containsKey(file)) {
                         //(Modified) the same in curr and other
                         if (other.map.get(file).equals(curr.map.get(file))) {
                             return;
@@ -116,7 +116,7 @@ public class Merge {
                     }
                 } else { //Not in split, not in curr
                     //Not in split, not in curr, in other
-                    if(other.map.containsKey(file)) {
+                    if (other.map.containsKey(file)) {
                         //Move other version to CWD
                         File cWDFile = join(CWD, file);
                         cWDFile.delete();
@@ -134,7 +134,7 @@ public class Merge {
         //Stage the right files (this assumes the right files are in the CWD)
         stage(curr);
         //Commit
-        String message = "Merged " + otherBranch + " into " +curr.BRANCH_FILE;
+        String message = "Merged " + otherBranch + " into " + curr.BRANCH_FILE;
         String currUID = readContentsAsString(HEAD_FILE);
         new Commit(message, currUID, otherBranchHead);
         if (conflict) {

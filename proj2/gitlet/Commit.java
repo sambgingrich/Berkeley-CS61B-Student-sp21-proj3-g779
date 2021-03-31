@@ -67,7 +67,7 @@ public class Commit implements Serializable {
         saveCommit(this);
     }
 
-    private static void modifyMaps (Commit p, Commit c) {
+    private static void modifyMaps(Commit p, Commit c) {
         HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
         HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
         //In the case that there is nothing staged to be added or removed.

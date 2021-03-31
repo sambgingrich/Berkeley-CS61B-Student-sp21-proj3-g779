@@ -38,8 +38,8 @@ public class Main {
                     System.exit(0);
                 } else {
                     merge(args[1]);
-                    break;
                 }
+                break;
             case "global-log":
                 globalLog();
                 break;
