@@ -27,6 +27,7 @@ public class CheckoutReset {
         //check branch exists
         if (!plainFilenamesIn(BRANCHES_DIR).contains(branchName)) {
             System.out.println("No such branch exists.");
+            System.exit(0);
         }
         //Load HEAD commit and branch's head
         File branchFile = join(BRANCHES_DIR, branchName);

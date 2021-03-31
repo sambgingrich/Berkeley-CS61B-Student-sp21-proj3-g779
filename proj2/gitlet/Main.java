@@ -60,7 +60,7 @@ public class Main {
                 if (!branchFile.exists()) {
                     System.out.println("A branch with that name does not exists.");
                     System.exit(0);
-                } else if (readContentsAsString(branchFile).equals(readContentsAsString(HEAD_FILE))) {
+                } else if (args[1].equals(readContentsAsString(CURRENT_BRANCH))) {
                     System.out.println("Cannot remove the current branch.");
                     System.exit(0);
                 } else {
