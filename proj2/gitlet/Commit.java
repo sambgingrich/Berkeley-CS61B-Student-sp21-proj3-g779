@@ -1,5 +1,7 @@
 package gitlet;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -32,6 +34,7 @@ public class Commit implements Serializable {
     //instance variables
     Date date;
     String parent; //the SHA1 hash of the parent commit, not a pointer to commit object.
+    String parent2;
     String message;
     HashMap<String, String> map;
     File BRANCH_FILE;
@@ -41,44 +44,58 @@ public class Commit implements Serializable {
         this.message = message;
         this.parent = parent;
         this.date = date;
-        if (parent != null) { //In the case of the initial commit
-            //Load parent node and add and remove maps
-            HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
-            HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
-            Commit p = loadCommit(parent);
-            //Set branch to parent's branch
-            this.BRANCH_FILE = p.BRANCH_FILE;
-            //In the case that there is nothing staged to be added or removed.
-            if (addMap.isEmpty() && removeMap.isEmpty()) {
-                System.out.println("No changes added to the commit.");
-                System.exit(0);
-            }
-            //Handle adding new mappings from Repository.addMap here.
-            //Source: Learned how to iterate through hashmap from geeksforgeeks.org
-            for (Map.Entry<String, String> entry : addMap.entrySet()) {
-                String key = entry.getKey();
-                String val = entry.getValue();
-                //Case where the file name is already in the parent map.
-                if (p.map.replace(key, val) == null) {
-                    p.map.put(key, val); //Case where the filename wasn't in the parent map.
-                }
-            }
-            //Handle removing mappings from remove map
-            for (Map.Entry<String, String> entry : removeMap.entrySet()) {
-                String key = entry.getKey();
-                p.map.remove(key);
-            }
-            this.map = p.map;
-        }
-        //In the case of the initial commit.
+        //In the case of the initial commit
         if (parent == null) {
             this.BRANCH_FILE = MASTER;
             this.map = new HashMap<>(5);
+            saveCommit(this);
+        } else {
+            Commit p = loadCommit(parent);
+            modifyMaps(p, this);
+            //Set branch to parent's branch
+            this.BRANCH_FILE = p.BRANCH_FILE;
+            saveCommit(this);
         }
+    }
+    
+    public Commit(String message, String parent, String parent2) {
+        this.message = message;
+        this.parent = parent;
+        this.parent2 = parent2;
+        this.date = new Date();
+        Commit p = loadCommit(parent);
+        this.BRANCH_FILE = p.BRANCH_FILE;
+        modifyMaps(p, this);
         saveCommit(this);
     }
 
-    public void saveCommit(Commit c) {
+    private static void modifyMaps (Commit p, Commit c) {
+        HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
+        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
+        //In the case that there is nothing staged to be added or removed.
+        if (addMap.isEmpty() && removeMap.isEmpty()) {
+            System.out.println("No changes added to the commit.");
+            System.exit(0);
+        }
+        //Handle adding new mappings from Repository.addMap here.
+        //Source: Learned how to iterate through hashmap from geeksforgeeks.org
+        for (Map.Entry<String, String> entry : addMap.entrySet()) {
+            String key = entry.getKey();
+            String val = entry.getValue();
+            //Case where the file name is already in the parent map.
+            if (p.map.replace(key, val) == null) {
+                p.map.put(key, val); //Case where the filename wasn't in the parent map.
+            }
+        }
+        //Handle removing mappings from remove map
+        for (Map.Entry<String, String> entry : removeMap.entrySet()) {
+            String key = entry.getKey();
+            p.map.remove(key);
+        }
+        c.map = p.map;
+    }
+
+    private static void saveCommit(Commit c) {
         //setup persistence for commits.
         byte[] cAsByte = serialize(c);
         String uID = Utils.sha1(cAsByte);
@@ -91,7 +108,7 @@ public class Commit implements Serializable {
         writeObject(newCommit, c);
         //Write the SHA1 hash of c into the HEAD and branch files once they are cleared.
         writeContents(HEAD_FILE, uID);
-        writeContents(BRANCH_FILE, uID);
+        writeContents(c.BRANCH_FILE, uID);
         //Clear the add and remove maps
         writeObject(ADD_FILE, new HashMap<String, String>(3));
         writeObject(REMOVE_FILE, new HashMap<String, String>(3));

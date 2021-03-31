@@ -8,6 +8,7 @@ import static gitlet.Log.*;
 import static gitlet.AddRemove.*;
 import static gitlet.CheckoutReset.*;
 import static gitlet.Status.*;
+import static gitlet.Merge.*;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
@@ -27,6 +28,18 @@ public class Main {
         }
         String firstArg = args[0];
         switch (firstArg) {
+            case "merge":
+                if (!plainFilenamesIn(BRANCHES_DIR).contains(args[1])) {
+                    System.out.println("A branch with that name does not exist.");
+                    System.exit(0);
+                }
+                if (args[1].equals(readContentsAsString(CURRENT_BRANCH))) {
+                    System.out.println("Cannot merge a branch with itself.");
+                    System.exit(0);
+                } else {
+                    merge(args[1]);
+                    break;
+                }
             case "global-log":
                 globalLog();
                 break;
@@ -105,5 +118,4 @@ public class Main {
                 System.exit(0);
         }
     }
-
 }
