@@ -25,7 +25,9 @@ public class AddRemove {
                 && c.map.get(fileName).equals(uID)) {
             if (removeMap.containsKey(fileName)) {
                 removeMap.remove(fileName);
+                writeObject(REMOVE_FILE, removeMap);
             }
+            return;
         }
         //If an older version is there, overwrite it
         if (addMap.containsKey(fileName)) {

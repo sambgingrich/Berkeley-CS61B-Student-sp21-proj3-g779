@@ -94,8 +94,8 @@ public class Merge {
             }
         }
         stage(curr);
-        String message = "Merged " + otherBranch + " into " + readContentsAsString(CURRENT_BRANCH);
-        new Commit(message, readContentsAsString(CURRENT_BRANCH), otherBranchHead);
+        String message = "Merged " + otherBranch + " into " + readContentsAsString(CURRENT_BRANCH) + ".";
+        new Commit(message, readContentsAsString(HEAD_FILE), otherBranchHead);
         if (conflict) {
             System.out.println("Encountered a merge conflict.");
         }
