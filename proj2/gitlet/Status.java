@@ -3,7 +3,6 @@ package gitlet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.*;
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
 
@@ -19,10 +18,10 @@ public class Status {
         rmFiles();
         System.out.println();
         System.out.println("=== Modifications Not Staged For Commit ===");
-        modsNotStaged();
+        //modsNotStaged();
         System.out.println();
         System.out.println("=== Untracked Files ===");
-        untracked();
+        //untracked();
         System.out.println();
     }
 
@@ -52,11 +51,11 @@ public class Status {
         }
     }
 
-    /* Extra Credit (32 Points) -------------------------------------------------- */
+    /* Extra Credit (32 Points) --------------------------------------------------
     private static void modsNotStaged() {
         Commit head = currentCommit();
         HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
-        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);\
+        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
         //Check for deleted files
         if (!head.map.isEmpty()) {
             for (String file : head.map.keySet()) {
@@ -69,7 +68,7 @@ public class Status {
                     byte[] contents = readContents(cWDFile);
                     String cWDFileUID = sha1(contents);
                     if (!head.map.get(file).equals(cWDFileUID)
-                    && !addMap.containsKey(file)) {
+                            && !addMap.containsKey(file)) {
                         System.out.println(file + " (modified)");
                     }
                 }
@@ -102,5 +101,5 @@ public class Status {
                 System.out.println(file);
             }
         }
-    }
+    }*/
 }
