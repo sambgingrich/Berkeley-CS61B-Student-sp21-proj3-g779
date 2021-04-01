@@ -10,11 +10,13 @@ import static gitlet.Utils.*;
 public class Merge {
     private static Commit splitPoint(String curr, String other) {
         Commit c = Commit.loadCommit(curr);
-        Commit o = Commit.loadCommit(other);
-        if (c.equals(o)) {
+        if (curr.equals(other)) {
             return c;
         } else {
-            return splitPoint(c.parent, o.parent);
+            Commit o = Commit.loadCommit(other);
+            String currParent = c.parent;
+            String otherParent = o.parent;
+            return Merge.splitPoint(currParent, otherParent);
         }
     }
 
@@ -38,7 +40,7 @@ public class Merge {
         File otherBranchFile = join(BRANCHES_DIR, otherBranch);
         String otherBranchHead = readContentsAsString(otherBranchFile);
         Commit other = Commit.loadCommit(otherBranchHead);
-        Commit split = splitPoint(readContentsAsString(HEAD_FILE), otherBranch);
+        Commit split = splitPoint(readContentsAsString(HEAD_FILE), otherBranchHead);
         Set<String> relevantFiles = relevantFiles(split, curr, other);
         boolean conflict = false;
         for (String file : relevantFiles) {

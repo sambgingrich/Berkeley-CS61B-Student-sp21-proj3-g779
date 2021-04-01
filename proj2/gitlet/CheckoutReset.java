@@ -71,13 +71,9 @@ public class CheckoutReset {
         for (String fileName : plainFilenamesIn(CWD)) {
             File cWDFile = join(CWD, fileName);
             cWDFile.delete();
-            if (c.map.entrySet().contains(fileName)) {
-                //Move all the files from branchHead to CWD, overwriting existing files
-                String blobUID = c.map.get(fileName);
-                File blobFile = join(BLOB_FOLDER, blobUID);
-                byte[] contents = readContents(blobFile);
-                writeContents(cWDFile, contents);
-            }
+        }
+        for (String file : c.map.keySet()) {
+            checkout(c, file);
         }
         //If reset, move the current branch pointer to the previous commit
         if (reset) {

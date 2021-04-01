@@ -1,7 +1,6 @@
 package gitlet;
 
 import java.io.File;
-
 import static gitlet.Repository.*;
 import static gitlet.Utils.*;
 import static gitlet.Log.*;
@@ -11,7 +10,7 @@ import static gitlet.Status.*;
 import static gitlet.Merge.*;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
- *  @author TODO
+ *  @author Samuel Gingrich
  */
 public class Main {
 
