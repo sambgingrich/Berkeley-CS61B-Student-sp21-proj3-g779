@@ -9,6 +9,8 @@ import static gitlet.Utils.*;
 
 
 public class Merge {
+    private static boolean conflict;
+
     private static void checkUntracked() {
 
     }
@@ -50,7 +52,7 @@ public class Merge {
         Commit other = Commit.loadCommit(otherBranchHead);
         Commit split = splitPoint(readContentsAsString(HEAD_FILE), otherBranchHead);
         Set<String> relevantFiles = relevantFiles(split, curr, other);
-        boolean conflict = false;
+        conflict = false;
         for (String file : relevantFiles) {
             if (split.map.containsKey(file)) { //In the split
                 if (curr.map.containsKey(file)) { //In curr
@@ -70,18 +72,17 @@ public class Merge {
                                 return; //Modified curr, unmodified other
                             } else { //Modified in curr and modified in other
                                 if (!curr.map.get(file).equals(other.map.get(file))) {
-                                    conflict = true; //Modified in different ways
+                                    conflict(curr, other, file); //Modified in different ways
                                 }
                             }
                         } else { //Modified in curr and not present in other
-                            conflict = true;
+                            conflict(curr, other, file);
                         }
                     }
                 } else { // Not in curr
                     if (other.map.containsKey(file)) { // Not in curr, in other
                         if (!other.map.get(file).equals(split.map.get(file))) {
-                            //Not in curr, modified in other
-                            conflict = true;
+                            conflict(curr, other, file); //Not in curr, modified in other
                         } //Not in curr, unmodified in other
                     } //not in curr, not in other (in split)
                 }
@@ -89,7 +90,7 @@ public class Merge {
                 if (curr.map.containsKey(file)) { //Not in split, in curr
                     if (other.map.containsKey(file)) { //Not in split, in curr, in other
                         if (!other.map.get(file).equals(curr.map.get(file))) {
-                            conflict = true; //Not in split, different in curr/other
+                            conflict(curr, other, file); //Not in split, different in curr/other
                         }
                     } //Not in split, in curr, not in other
                 } else { //Not in split, not in curr
@@ -139,8 +140,27 @@ public class Merge {
         writeContents(cWDFile, contents);
     }
 
-    private static void conflict(String currUID, String otherUID) {
-
+    private static void conflict(Commit curr, Commit other, String file) {
+        String contents;
+        conflict = true;
+        File cWDFile = join(CWD, file);
+        cWDFile.delete();
+        if (!curr.map.containsKey(file)) { //Not in curr
+            contents = "<<<<<<< HEAD" + "\n" + "=======";
+            File otherFile = join(BLOB_FOLDER, other.map.get(file));
+            String otherContents = readContentsAsString(otherFile);
+            contents = contents + otherContents + ">>>>>>>";
+        } else if (!other.map.containsKey(file)) { // Not in other
+            File currFile = join(BLOB_FOLDER, curr.map.get(file));
+            String currContents = readContentsAsString(currFile);
+            contents = "<<<<<<< HEAD" + currContents + "=======" + "\n" + ">>>>>>>";
+        } else { // in both
+            File currFile = join(BLOB_FOLDER, curr.map.get(file));
+            File otherFile = join(BLOB_FOLDER, other.map.get(file));
+            String currContents = readContentsAsString(currFile);
+            String otherContents = readContentsAsString(otherFile);
+            contents = "<<<<<<< HEAD" + currContents + "=======" + otherContents + ">>>>>>>";
+        }
+        writeContents(cWDFile, contents);
     }
-
 }
