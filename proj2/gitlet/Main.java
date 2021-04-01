@@ -94,6 +94,10 @@ public class Main {
                     //Handle case of checkout --filename
                     checkout(head, args[2]);
                 } else if (args.length == 4) {
+                    if (args[2].equals("--")) {
+                        System.out.println("Incorrect operands.");
+                        System.exit(0);
+                    }
                     //handles the case that the ID doesn't exist.
                     Commit commitX = Commit.loadCommit(args[1]);
                     //Handle case of checkout commit id -- filename
