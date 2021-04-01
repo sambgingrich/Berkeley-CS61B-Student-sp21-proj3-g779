@@ -28,6 +28,7 @@ public class Main {
         String firstArg = args[0];
         switch (firstArg) {
             case "merge":
+                checkInit();
                 if (!plainFilenamesIn(BRANCHES_DIR).contains(args[1])) {
                     System.out.println("A branch with that name does not exist.");
                     System.exit(0);
@@ -40,21 +41,26 @@ public class Main {
                 }
                 break;
             case "global-log":
+                checkInit();
                 globalLog();
                 break;
             case "find":
+                checkInit();
                 find(args[1]);
                 break;
             case "status":
+                checkInit();
                 status();
                 break;
             case "init":
                 init();
                 break;
             case "add":
+                checkInit();
                 add(args[1]);
                 break;
             case "rm-branch":
+                checkInit();
                 File branchFile = join(BRANCHES_DIR, args[1]);
                 if (!branchFile.exists()) {
                     System.out.println("A branch with that name does not exists.");
@@ -67,9 +73,11 @@ public class Main {
                 }
                 break;
             case "rm":
+                checkInit();
                 rm(args[1]);
                 break;
             case "commit":
+                checkInit();
                 if (args.length == 1 || args[1].isEmpty()) {
                     System.out.println("Please enter a commit message.");
                     System.exit(0);
@@ -80,6 +88,7 @@ public class Main {
                 }
                 break;
             case "checkout":
+                checkInit();
                 if (args.length == 3) {
                     Commit head = currentCommit();
                     //Handle case of checkout --filename
@@ -94,6 +103,7 @@ public class Main {
                 }
                 break;
             case "branch":
+                checkInit();
                 File branchName = join(BRANCHES_DIR, args[1]);
                 if (branchName.exists()) {
                     System.out.println("A branch with that name already exists.");
@@ -107,14 +117,23 @@ public class Main {
                 }
                 break;
             case "log":
+                checkInit();
                 log();
                 break;
             case "reset":
+                checkInit();
                 reset(args[1]);
                 break;
             default:
                 System.out.println("No command with that name exists.");
                 System.exit(0);
+        }
+    }
+
+    private static void checkInit() {
+        if (!GITLET_DIR.exists()) {
+            System.out.println("Not in an initialized Gitlet directory.");
+            System.exit(0);
         }
     }
 }
