@@ -9,6 +9,10 @@ import static gitlet.Utils.*;
 
 
 public class Merge {
+    private static void checkUntracked() {
+
+    }
+
     private static Commit splitPoint(String curr, String other) {
         Commit c = Commit.loadCommit(curr);
         if (curr.equals(other)) {
@@ -31,13 +35,15 @@ public class Merge {
         return mergedSet;
     }
 
-    /*0. Find split point
-        1. Create a list of files to consider
-        2. Go through and decide what to put in CWD
-        3. Check based on what's in the CWD and in the current branch what to stage
-        4. Commit */
+    /* -1. Check for untracked files, check for uncommited changes.
+     0. Find split point
+     1. Create a list of files to consider
+     2. Go through and decide what to put in CWD
+     3. Check based on what's in the CWD and in the current branch what to stage
+     4. Commit */
 
     public static void merge(String otherBranch) {
+        checkUntracked();
         Commit curr = currentCommit();
         File otherBranchFile = join(BRANCHES_DIR, otherBranch);
         String otherBranchHead = readContentsAsString(otherBranchFile);
