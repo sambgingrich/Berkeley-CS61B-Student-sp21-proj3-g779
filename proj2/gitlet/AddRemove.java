@@ -51,16 +51,19 @@ public class AddRemove {
         Commit c = currentCommit();
         File removeFile = join(CWD, filename);
         HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
-        if (addMap.containsKey(filename)) {
-            removeMap.put(filename, addMap.get(filename));
-            addMap.remove(filename);
-        } else if (c.map.containsKey(filename)) {
-            removeMap.put(filename, c.map.get(filename));
-            removeFile.delete();
-        } else {
+
+        if (!addMap.containsKey(filename) && !c.map.containsKey(filename)) {
             System.out.println("No reason to remove the file.");
             System.exit(0);
         }
+        if (addMap.containsKey(filename)) {
+            addMap.remove(filename);
+        }
+        if (c.map.containsKey(filename)) {
+            removeMap.put(filename, c.map.get(filename));
+            removeFile.delete();
+        }
+
         writeObject(ADD_FILE, addMap);
         writeObject(REMOVE_FILE, removeMap);
     }

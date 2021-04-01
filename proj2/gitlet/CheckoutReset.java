@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
@@ -15,7 +16,11 @@ public class CheckoutReset {
             System.exit(0);
         }
         File cWDFile = join(CWD, fileName);
-        cWDFile.delete();
+        try {
+            cWDFile.createNewFile();
+        } catch (IOException exception) {
+            throw new IllegalArgumentException(exception.getMessage());
+        }
         String blobUID = c.map.get(fileName);
         File blobFile = join(BLOB_FOLDER, blobUID);
         byte[] contents = readContents(blobFile);
@@ -49,7 +54,7 @@ public class CheckoutReset {
         //check for  untracked files
         Commit head = currentCommit();
         Commit c = Commit.loadCommit(commitID);
-         /*HashMap<String, String>removeMap = readObject(REMOVE_FILE, HashMap.class);
+         /* HashMap<String, String>removeMap = readObject(REMOVE_FILE, HashMap.class);
         HashMap<String, String>addMap = readObject(ADD_FILE, HashMap.class);
         //Checks if working file is both untracked and would be overwritten by the reset.
         for (String fileName : plainFilenamesIn(CWD)) {

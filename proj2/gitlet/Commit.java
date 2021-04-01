@@ -51,7 +51,9 @@ public class Commit implements Serializable {
             Commit p = loadCommit(parent);
             modifyMaps(p, this);
             //Set branch to parent's branch
-            this.BRANCH_FILE = p.BRANCH_FILE;
+            String currBranch = readContentsAsString(CURRENT_BRANCH);
+            File currBranchFile = join(BRANCHES_DIR, currBranch);
+            this.BRANCH_FILE = currBranchFile;
             saveCommit(this);
         }
     }
@@ -62,7 +64,9 @@ public class Commit implements Serializable {
         this.parent2 = parent2;
         this.date = new Date();
         Commit p = loadCommit(parent);
-        this.BRANCH_FILE = p.BRANCH_FILE;
+        String currBranch = readContentsAsString(CURRENT_BRANCH);
+        File currBranchFile = join(BRANCHES_DIR, currBranch);
+        this.BRANCH_FILE = currBranchFile;
         modifyMaps(p, this);
         saveCommit(this);
     }
