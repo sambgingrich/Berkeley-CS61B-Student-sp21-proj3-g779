@@ -94,7 +94,7 @@ public class Main {
                     //Handle case of checkout --filename
                     checkout(head, args[2]);
                 } else if (args.length == 4) {
-                    if (args[2].equals("--")) {
+                    if (!args[2].equals("--")) {
                         System.out.println("Incorrect operands.");
                         System.exit(0);
                     }
