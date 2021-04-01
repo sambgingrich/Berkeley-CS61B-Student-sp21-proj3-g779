@@ -54,25 +54,22 @@ public class CheckoutReset {
         //check for  untracked files
         Commit head = currentCommit();
         Commit c = Commit.loadCommit(commitID);
-         /* HashMap<String, String>removeMap = readObject(REMOVE_FILE, HashMap.class);
-        HashMap<String, String>addMap = readObject(ADD_FILE, HashMap.class);
-        //Checks if working file is both untracked and would be overwritten by the reset.
+        /* Checks if working file is both untracked and would be overwritten*/
         for (String fileName : plainFilenamesIn(CWD)) {
-            if (!head.map.entrySet().contains(fileName)
-                    && !addMap.containsKey(fileName)
-                    && !removeMap.containsKey(fileName)
+            if (!head.map.keySet().contains(fileName)
                     && c.map.containsKey(fileName)) {
                 String branchFileUID = c.map.get(fileName);
                 File cWDFile = join(CWD, fileName);
-                String cWDFileUID = sha1(cWDFile);
+                byte[] contents = readContents(cWDFile);
+                String cWDFileUID = sha1(contents);
                 if (!branchFileUID.equals(cWDFileUID)) {
                     System.out.println("There is an untracked file in the way; delete it, "
                             + "or add and commit it first.");
                     System.exit(0);
                 }
             }
-        }*/
-        //Delete all files in CWD that weren't in in branchHead
+        }
+        //Delete all files in CWD
         for (String fileName : plainFilenamesIn(CWD)) {
             File cWDFile = join(CWD, fileName);
             cWDFile.delete();

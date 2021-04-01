@@ -2,6 +2,7 @@ package gitlet;
 
 import static gitlet.AddRemove.*;
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 import static gitlet.Repository.*;
 import static gitlet.Utils.*;
@@ -21,7 +22,8 @@ public class Merge {
     }
 
     private static Set<String> relevantFiles(Commit splitPoint, Commit curr, Commit other) {
-        Set<String> mergedSet = splitPoint.map.keySet();
+        Set<String> mergedSet = new HashSet<>();
+        mergedSet.addAll(splitPoint.map.keySet());
         mergedSet.removeAll(curr.map.keySet());
         mergedSet.addAll(curr.map.keySet());
         mergedSet.removeAll(other.map.keySet());
@@ -71,10 +73,10 @@ public class Merge {
                     }
                 } else { // Not in curr
                     if (other.map.containsKey(file)) { // Not in curr, in other
-                        if (other.map.get(file).equals(split.map.get(file))) {
+                        if (!other.map.get(file).equals(split.map.get(file))) {
                             //Not in curr, modified in other
                             conflict = true;
-                        }
+                        } //Not in curr, unmodified in other
                     } //not in curr, not in other (in split)
                 }
             } else { //Not in the split
@@ -92,7 +94,7 @@ public class Merge {
             }
         }
         stage(curr);
-        String message = "Merged " + otherBranch + " into " + curr.BRANCH_FILE;
+        String message = "Merged " + otherBranch + " into " + readContentsAsString(CURRENT_BRANCH);
         new Commit(message, readContentsAsString(CURRENT_BRANCH), otherBranchHead);
         if (conflict) {
             System.out.println("Encountered a merge conflict.");

@@ -23,7 +23,9 @@ public class AddRemove {
         //If it's tracked in current commit and hasn't changed, do nothing.
         if (c.map != null && c.map.containsKey(fileName)
                 && c.map.get(fileName).equals(uID)) {
-            return;
+            if (removeMap.containsKey(fileName)) {
+                removeMap.remove(fileName);
+            }
         }
         //If an older version is there, overwrite it
         if (addMap.containsKey(fileName)) {
