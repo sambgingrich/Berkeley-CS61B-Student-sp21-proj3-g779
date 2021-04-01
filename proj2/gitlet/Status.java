@@ -3,13 +3,11 @@ package gitlet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.io.*;
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
 
 public class Status {
-    //private static List<String> untrackedFiles;
-
     public static void status() {
         System.out.println("=== Branches ===");
         branches();
@@ -21,10 +19,10 @@ public class Status {
         rmFiles();
         System.out.println();
         System.out.println("=== Modifications Not Staged For Commit ===");
-        //modsNotStaged();
+        modsNotStaged();
         System.out.println();
         System.out.println("=== Untracked Files ===");
-        //untracked();
+        untracked();
         System.out.println();
     }
 
@@ -54,40 +52,55 @@ public class Status {
         }
     }
 
-    /* Extra Credit (32 Points) --------------------------------------------------
+    /* Extra Credit (32 Points) -------------------------------------------------- */
     private static void modsNotStaged() {
-        String headUID = readContentsAsString(HEAD_FILE);
-        Commit head = Commit.loadCommit(headUID);
-        if (head.map.isEmpty()) {
-            return;
-        }
+        Commit head = currentCommit();
+        HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
+        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);\
         //Check for deleted files
-        for (Map.Entry<String, String> entry : head.map.entrySet()) {
-            if (!plainFilenamesIn(CWD).contains(entry.getKey())) {
-                System.out.println(entry.getKey() + " (deleted)");
-            }
-        }
-        //Check for modified files
-        addMap = readObject(ADD_FILE, HashMap.class);
-        for (String fileName : plainFilenamesIn(CWD)) {
-            if (!head.map.entrySet().contains(fileName) && !addMap.entrySet().contains(fileName)) {
-                untrackedFiles.add(fileName);
-            } else {
-                File wdFile = join(CWD, fileName);
-                String wdFileUID = sha1(wdFile);
-                if (!wdFileUID.equals(head.map.get(fileName))
-                        && !wdFileUID.equals(addMap.get(fileName))) {
-                    System.out.println(fileName + " (modified)");
+        if (!head.map.isEmpty()) {
+            for (String file : head.map.keySet()) {
+                if (!plainFilenamesIn(CWD).contains(file)) {
+                    if (removeMap.containsKey(file)) {
+                        System.out.println(file + " (deleted)");
+                    }
+                } else {
+                    File cWDFile = join(CWD, file);
+                    byte[] contents = readContents(cWDFile);
+                    String cWDFileUID = sha1(contents);
+                    if (!head.map.get(file).equals(cWDFileUID)
+                    && !addMap.containsKey(file)) {
+                        System.out.println(file + " (modified)");
+                    }
                 }
             }
         }
+        //check add map
+        if (!addMap.isEmpty()) {
+            for (String file : addMap.keySet()) {
+                if (plainFilenamesIn(CWD).contains(file)) {
+                    File cWDFile = join(CWD, file);
+                    byte[] contents = readContents(cWDFile);
+                    String wdFileUID = sha1(contents);
+                    if (!wdFileUID.equals(head.map.get(file))
+                            && !wdFileUID.equals(addMap.get(file))) {
+                        System.out.println(file + " (modified)");
+                    }
+                } else {
+                    System.out.println(file + " (deleted)");
+                }
+            }
+        }
+
     }
 
     private static void untracked() {
-        if (!(untrackedFiles == null)) {
-            for (String untrackedFileName : untrackedFiles) {
-                System.out.println(untrackedFileName);
+        Commit head = currentCommit();
+        HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
+        for (String file : plainFilenamesIn(CWD)) {
+            if (!head.map.entrySet().contains(file) && !addMap.entrySet().contains(file)) {
+                System.out.println(file);
             }
         }
-    }*/
+    }
 }
