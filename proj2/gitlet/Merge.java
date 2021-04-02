@@ -149,17 +149,18 @@ public class Merge {
             contents = "<<<<<<< HEAD" + "\n" + "=======";
             File otherFile = join(BLOB_FOLDER, other.map.get(file));
             String otherContents = readContentsAsString(otherFile);
-            contents = contents + otherContents + ">>>>>>>";
+            contents = contents + "\n" +  otherContents + ">>>>>>>";
         } else if (!other.map.containsKey(file)) { // Not in other
             File currFile = join(BLOB_FOLDER, curr.map.get(file));
             String currContents = readContentsAsString(currFile);
-            contents = "<<<<<<< HEAD" + currContents + "=======" + "\n" + ">>>>>>>";
+            contents = "<<<<<<< HEAD" + "\n" + currContents + "=======" + "\n" + ">>>>>>>";
         } else { // in both
             File currFile = join(BLOB_FOLDER, curr.map.get(file));
             File otherFile = join(BLOB_FOLDER, other.map.get(file));
             String currContents = readContentsAsString(currFile);
             String otherContents = readContentsAsString(otherFile);
-            contents = "<<<<<<< HEAD" + currContents + "=======" + otherContents + ">>>>>>>";
+            contents = "<<<<<<< HEAD" + "\n" + currContents + "======="
+                    + "\n" +  otherContents + ">>>>>>>";
         }
         writeContents(cWDFile, contents);
     }
