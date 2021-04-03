@@ -2,6 +2,7 @@ package gitlet;
 
 import static gitlet.AddRemove.*;
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import static gitlet.Repository.*;
@@ -11,8 +12,30 @@ import static gitlet.Utils.*;
 public class Merge {
     private static boolean conflict;
 
-    private static void checkUntracked() {
-
+    private static void checkUntracked(String otherBranch) {
+        HashMap<String, String> addMap = readObject(ADD_FILE, HashMap.class);
+        HashMap<String, String> removeMap = readObject(REMOVE_FILE, HashMap.class);
+        if (!addMap.isEmpty() || !removeMap.isEmpty()) {
+            System.out.println("You have uncommitted changes.");
+            System.exit(0);
+        }
+        Commit curr = currentCommit();
+        File otherBranchFile = join(BRANCHES_DIR, otherBranch);
+        String otherBranchHead = readContentsAsString(otherBranchFile);
+        Commit other = Commit.loadCommit(otherBranchHead);
+        for (String fileName : plainFilenamesIn(CWD)) {
+            if (!curr.map.keySet().contains(fileName)
+                    && other.map.containsKey(fileName)) {
+                String branchFileUID = other.map.get(fileName);
+                File cWDFile = join(CWD, fileName);
+                byte[] contents = readContents(cWDFile);
+                String cWDFileUID = sha1(contents);
+                if (!branchFileUID.equals(cWDFileUID)) {
+                    System.out.println("hello");
+                    System.exit(0);
+                }
+            }
+        }
     }
 
     private static Commit splitPoint(String curr, String other) {
@@ -45,7 +68,7 @@ public class Merge {
      4. Commit */
 
     public static void merge(String otherBranch) {
-        checkUntracked();
+        checkUntracked(otherBranch);
         Commit curr = currentCommit();
         File otherBranchFile = join(BRANCHES_DIR, otherBranch);
         String otherBranchHead = readContentsAsString(otherBranchFile);
