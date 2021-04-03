@@ -31,7 +31,8 @@ public class Merge {
                 byte[] contents = readContents(cWDFile);
                 String cWDFileUID = sha1(contents);
                 if (!branchFileUID.equals(cWDFileUID)) {
-                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                    System.out.println("There is an untracked file in the way; "
+                            + "delete it, or add and commit it first.");
                     System.exit(0);
                 }
             }
