@@ -68,7 +68,7 @@ public class Merge {
                         }
                     } else { //Modified in curr
                         if (other.map.containsKey(file)) { //Modified in curr and present in other
-                            if (other.map.get(file).equals(split.map.get(curr))) {
+                            if (other.map.get(file).equals(split.map.get(file))) {
                                 return; //Modified curr, unmodified other
                             } else { //Modified in curr and modified in other
                                 if (!curr.map.get(file).equals(other.map.get(file))) {
