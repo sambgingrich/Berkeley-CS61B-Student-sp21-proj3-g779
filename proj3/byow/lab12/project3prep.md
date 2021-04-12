@@ -14,7 +14,7 @@ I think for the project, I'll definitely use Neil's strategy of braking things d
 What is the hexagon and what is the tesselation on the Project 3 side?**
 
 Answer: The rooms and halways in project 3 are like the hexagons in this project. We'll need to make the 
-rooms and halways line up in such a way that they are connected, which is analogous to tessellating 
+rooms and hallways line up in such a way that they are connected, which is analogous to tessellating 
 the hexagons in this lab. 
 
 -----
