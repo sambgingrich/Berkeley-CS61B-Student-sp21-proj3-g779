@@ -3,8 +3,9 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
-public class Room {
+import static byow.Core.TestingMain.RANDOM;
 
+public class Room {
     public static class Position {
         int x;
         int y;
@@ -40,6 +41,16 @@ public class Room {
         for (Position o : openings) {
             tiles[o.x][o.y] = Tileset.FLOOR;
         }
+    }
 
+    public static Position randomRoomOpening(Position start, int x, int y) {
+        int topOrRight = RANDOM.nextInt(1);
+        if (topOrRight == 0) { // top
+            int openingX = RANDOM.nextInt(x - 2);
+            return new Position(start.x + 1 + openingX, start.y + y - 1);
+        } else { // right
+            int openingY = RANDOM.nextInt(y - 2);
+            return new Position(start.x + x - 1, start.y + 1 + openingY);
+        }
     }
 }

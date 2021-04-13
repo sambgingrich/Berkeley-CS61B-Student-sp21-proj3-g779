@@ -5,16 +5,16 @@ import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 import java.util.Random;
 import byow.Core.Room.*;
-import com.sun.tools.hat.internal.parser.PositionInputStream;
-
 import static byow.Core.Room.drawRoom;
+import static byow.Core.Hallway.drawHallway;
+import static byow.Core.Room.randomRoomOpening;
 
 public class TestingMain {
     private static final int WIDTH = 50;
     private static final int HEIGHT = 50;
 
-    private static final long SEED = 2873123;
-    private static final Random RANDOM = new Random(SEED);
+    public static final long SEED = 2873124;
+    public static final Random RANDOM = new Random(SEED);
 
     /**
      * Fills the given 2D array of tiles with RANDOM tiles.
@@ -30,14 +30,18 @@ public class TestingMain {
         }
     }
 
+    /*
+    This is an example of what you can draw with what I have so far.
+    The room only lines up with one of the hallways if the seed is 2873124
+     */
     public static void drawWorld(TETile[][] tiles) {
         fillWithNothing(tiles);
-        Position start = new Room.Position(20, 20);
-        Position opening = new Room.Position(22, 20);
+        Position start = new Position(20, 20);
+        Position opening = randomRoomOpening(start, 10, 4);
         Position[] openings = new Position[1];
         openings[0] = opening;
         drawRoom(tiles, start, 10, 4, openings);
-        //drawRow(tiles, true, start, 7);
+        drawHallway(tiles, false, new Position(22, 24), 2);
     }
 
     public static void main(String[] args) {
